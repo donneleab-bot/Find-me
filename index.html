@@ -3,25 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Find Me — письма, которые ищут адресата</title>
+<title>Find Me — Почтовое отделение, где находят людей</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Caveat:wght@500;700&family=Special+Elite&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Caveat:wght@400;500;700&family=Special+Elite&family=Marck+Script&display=swap" rel="stylesheet">
 
 <style>
   :root {
-    --paper:        #f4ead3;
-    --paper-warm:   #ecdfc1;
-    --paper-shadow: #d9c9a1;
+    --paper:        #f2e7cd;
+    --paper-warm:   #ecdcb8;
+    --paper-aged:   #e3d1a6;
+    --paper-dark:   #d9c9a1;
     --ink:          #2a2118;
     --ink-soft:     #4a3d2a;
+    --ink-faded:    #6b5a3d;
     --seal:         #8b2a2a;
     --seal-dark:    #5e1a1a;
+    --seal-light:   #a83535;
     --accent:       #5e6f4a;
+    --accent-dark:  #3f4b32;
     --gold:         #b08a3e;
-    --wood-dark:    #1e1a13;
+    --gold-light:   #d4b06a;
+    --wood-dark:    #1a1610;
     --wood:         #2d2519;
+    --wood-warm:    #3a2f1e;
+    --stamp-blue:   #2d4a5e;
+    --stamp-violet: #4a2d5e;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -32,189 +40,423 @@
     font-family: 'Cormorant Garamond', Georgia, serif;
     color: var(--ink);
     min-height: 100vh;
-    padding: 40px 20px 80px;
+    padding: 0 0 80px;
     background: var(--wood-dark);
     position: relative;
     overflow-x: hidden;
   }
 
-  /* ── Фон: дерево + свет + виньетка + шум ── */
+  /* ══════════════════════════════════════════════
+     ФОН: дерево, свет, шум, виньетка
+     ══════════════════════════════════════════════ */
   body::before {
     content: '';
     position: fixed; inset: 0;
     background:
-      radial-gradient(ellipse at 20% 0%, rgba(255, 220, 160, 0.15), transparent 55%),
-      radial-gradient(ellipse at 80% 100%, rgba(255, 200, 140, 0.08), transparent 55%),
-      repeating-linear-gradient(92deg, rgba(0,0,0,0.08) 0px, rgba(0,0,0,0.08) 2px, transparent 2px, transparent 7px),
-      linear-gradient(180deg, #2d2519 0%, #1e1a13 60%, #0f0c08 100%);
-    z-index: -2;
+      radial-gradient(ellipse at 15% 0%, rgba(255, 220, 160, 0.18), transparent 50%),
+      radial-gradient(ellipse at 85% 100%, rgba(255, 200, 140, 0.08), transparent 55%),
+      repeating-linear-gradient(91deg,
+        rgba(0,0,0,0.10) 0px, rgba(0,0,0,0.10) 2px,
+        transparent 2px, transparent 6px,
+        rgba(255,220,160,0.02) 6px, rgba(255,220,160,0.02) 7px),
+      linear-gradient(180deg, #2d2519 0%, #1e1a13 55%, #0f0c08 100%);
+    z-index: -3;
   }
-  /* Шум */
   body::after {
     content: '';
     position: fixed; inset: 0;
     pointer-events: none;
-    opacity: 0.35;
+    opacity: 0.4;
     mix-blend-mode: overlay;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.6 0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>");
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.65 0'/></filter><rect width='220' height='220' filter='url(%23n)'/></svg>");
     z-index: -1;
   }
-
-  /* ── Виньетка ── */
   .vignette {
     position: fixed; inset: 0;
     pointer-events: none;
-    background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.55) 100%);
+    background: radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.7) 110%);
     z-index: 0;
   }
 
-  header, .toolbar, .feed, footer { position: relative; z-index: 2; }
+  header, .toolbar, .tabs, .feed, footer, .hero { position: relative; z-index: 2; }
 
-  /* ── HEADER ── */
+  /* ══════════════════════════════════════════════
+     HEADER — шапка почтового отделения
+     ══════════════════════════════════════════════ */
   header {
-    max-width: 900px;
-    margin: 0 auto 40px;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 50px 20px 30px;
     text-align: center;
     color: var(--paper);
+    position: relative;
   }
 
   .logo-mark {
-    display: inline-block;
-    width: 68px; height: 68px;
-    margin-bottom: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 84px; height: 84px;
+    margin-bottom: 18px;
     border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, #a83535, var(--seal) 45%, var(--seal-dark) 100%);
+    background: radial-gradient(circle at 35% 30%, #b84040, var(--seal) 45%, var(--seal-dark) 100%);
     box-shadow:
-      inset 0 -4px 8px rgba(0,0,0,0.5),
-      inset 0 4px 6px rgba(255,180,140,0.3),
-      0 10px 24px rgba(0,0,0,0.6),
-      0 0 0 2px rgba(255,220,180,0.1);
+      inset 0 -6px 12px rgba(0,0,0,0.6),
+      inset 0 6px 8px rgba(255,180,140,0.35),
+      0 14px 32px rgba(0,0,0,0.7),
+      0 0 0 3px rgba(255,220,180,0.12),
+      0 0 60px rgba(200,90,60,0.35);
     position: relative;
-    animation: sealPulse 4s ease-in-out infinite;
+    animation: sealPulse 5s ease-in-out infinite;
+  }
+  .logo-mark::before {
+    content: '✉';
+    font-size: 36px;
+    color: #f4d9b0;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.7);
   }
   .logo-mark::after {
-    content: '✉';
-    position: absolute; inset: 0;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 28px; color: #f4d9b0;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.7);
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 1px dashed rgba(255,220,180,0.25);
+    animation: rotateSlow 40s linear infinite;
   }
   @keyframes sealPulse {
-    0%, 100% { box-shadow: inset 0 -4px 8px rgba(0,0,0,0.5), inset 0 4px 6px rgba(255,180,140,0.3), 0 10px 24px rgba(0,0,0,0.6), 0 0 0 2px rgba(255,220,180,0.1); }
-    50%      { box-shadow: inset 0 -4px 8px rgba(0,0,0,0.5), inset 0 4px 6px rgba(255,180,140,0.3), 0 10px 34px rgba(200,90,60,0.5), 0 0 0 4px rgba(255,220,180,0.2); }
+    0%, 100% { box-shadow: inset 0 -6px 12px rgba(0,0,0,0.6), inset 0 6px 8px rgba(255,180,140,0.35), 0 14px 32px rgba(0,0,0,0.7), 0 0 0 3px rgba(255,220,180,0.12), 0 0 60px rgba(200,90,60,0.35); }
+    50%      { box-shadow: inset 0 -6px 12px rgba(0,0,0,0.6), inset 0 6px 8px rgba(255,180,140,0.35), 0 14px 40px rgba(0,0,0,0.75), 0 0 0 5px rgba(255,220,180,0.22), 0 0 90px rgba(220,110,70,0.55); }
   }
+  @keyframes rotateSlow { to { transform: rotate(360deg); } }
 
   header h1 {
     font-family: 'Special Elite', serif;
-    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-size: clamp(2rem, 5.5vw, 3.4rem);
     font-weight: 400;
-    letter-spacing: 8px;
-    margin-bottom: 12px;
+    letter-spacing: 10px;
+    margin-bottom: 14px;
     color: #f0e2c2;
     text-shadow:
       0 1px 0 #000,
-      0 2px 8px rgba(0,0,0,0.8),
-      0 0 30px rgba(200,140,80,0.3);
+      0 3px 10px rgba(0,0,0,0.9),
+      0 0 40px rgba(200,140,80,0.4);
   }
-  header p {
+  header h1 .dot {
+    display: inline-block;
+    color: var(--seal-light);
+    transform: translateY(-4px);
+  }
+  header .subtitle {
     font-family: 'Caveat', cursive;
-    font-size: 1.3rem;
+    font-size: 1.35rem;
     color: #cbb48a;
     opacity: 0.9;
-    letter-spacing: 0.5px;
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.3;
+  }
+  .header-ornament {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 22px;
+    color: var(--gold);
+    opacity: 0.6;
+  }
+  .header-ornament::before,
+  .header-ornament::after {
+    content: '';
+    height: 1px;
+    width: 60px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .header-ornament span {
+    font-family: 'Special Elite', serif;
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    color: var(--gold-light);
   }
 
-  /* ── TOOLBAR ── */
+  /* ══════════════════════════════════════════════
+     HERO — верхний баннер почтамта
+     ══════════════════════════════════════════════ */
+  .hero {
+    max-width: 960px;
+    margin: 30px auto 0;
+    padding: 0 20px;
+    text-align: center;
+  }
+  .hero-quote {
+    font-family: 'Marck Script', cursive;
+    font-size: 1.6rem;
+    color: #d9c9a1;
+    opacity: 0.85;
+    line-height: 1.4;
+    max-width: 620px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .hero-quote::before,
+  .hero-quote::after {
+    content: '"';
+    font-size: 3rem;
+    color: var(--gold);
+    opacity: 0.5;
+    font-family: 'Cormorant Garamond', serif;
+    line-height: 0;
+    vertical-align: -0.35em;
+  }
+  .hero-quote::before { margin-right: 8px; }
+  .hero-quote::after  { margin-left: 8px; }
+
+  /* ══════════════════════════════════════════════
+     TOOLBAR
+     ══════════════════════════════════════════════ */
   .toolbar {
-    max-width: 900px;
-    margin: 0 auto 40px;
+    max-width: 960px;
+    margin: 34px auto 0;
+    padding: 0 20px;
     display: flex;
     gap: 12px;
     flex-wrap: wrap;
     justify-content: center;
-    padding: 16px;
-    background: rgba(20, 16, 10, 0.5);
-    border-radius: 14px;
-    border: 1px solid rgba(200, 160, 90, 0.15);
-    box-shadow: inset 0 1px 0 rgba(255,220,160,0.08), 0 8px 30px rgba(0,0,0,0.5);
-    backdrop-filter: blur(6px);
+    align-items: center;
   }
 
   .toolbar input,
   .toolbar select {
-    padding: 12px 16px;
-    border: 1px solid rgba(180, 140, 80, 0.3);
+    padding: 13px 18px;
+    border: 1px solid rgba(180, 140, 80, 0.35);
     border-radius: 8px;
     font-family: 'Cormorant Garamond', serif;
     font-size: 1rem;
-    background: rgba(244, 234, 211, 0.06);
+    background: rgba(30, 24, 15, 0.75);
     color: #efe2c4;
     transition: 0.25s;
+    backdrop-filter: blur(6px);
+    box-shadow: inset 0 1px 0 rgba(255,220,160,0.08), 0 4px 14px rgba(0,0,0,0.4);
   }
   .toolbar input::placeholder { color: #9a8a6a; font-style: italic; }
   .toolbar input:focus,
   .toolbar select:focus {
     outline: none;
-    background: rgba(244, 234, 211, 0.12);
+    background: rgba(30, 24, 15, 0.95);
     border-color: var(--gold);
-    box-shadow: 0 0 0 3px rgba(176, 138, 62, 0.2);
+    box-shadow: inset 0 1px 0 rgba(255,220,160,0.15), 0 0 0 3px rgba(176, 138, 62, 0.25), 0 6px 20px rgba(0,0,0,0.5);
   }
-  .toolbar input { flex: 1; min-width: 220px; }
-  .toolbar select { cursor: pointer; }
+  .toolbar input { flex: 1; min-width: 240px; }
+  .toolbar select { cursor: pointer; min-width: 170px; }
   .toolbar select option { background: #2d2519; color: #efe2c4; }
 
   .btn-new {
-    padding: 12px 22px;
+    padding: 13px 26px;
     border: none;
     border-radius: 8px;
     font-family: 'Special Elite', serif;
-    font-size: 0.95rem;
-    letter-spacing: 1px;
+    font-size: 0.9rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
     cursor: pointer;
     color: #f4e2bc;
-    background: linear-gradient(180deg, #a83535, var(--seal) 50%, var(--seal-dark));
+    background: linear-gradient(180deg, #b84040, var(--seal) 50%, var(--seal-dark));
     box-shadow:
-      inset 0 1px 0 rgba(255,200,180,0.4),
-      inset 0 -2px 4px rgba(0,0,0,0.4),
-      0 6px 16px rgba(0,0,0,0.5);
+      inset 0 1px 0 rgba(255,200,180,0.5),
+      inset 0 -3px 6px rgba(0,0,0,0.5),
+      0 8px 20px rgba(0,0,0,0.6),
+      0 0 0 1px rgba(255,200,160,0.1);
     transition: 0.25s;
     position: relative;
     overflow: hidden;
   }
+  .btn-new::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,220,180,0.25), transparent);
+    transition: left 0.6s;
+  }
   .btn-new:hover {
     transform: translateY(-2px);
     box-shadow:
-      inset 0 1px 0 rgba(255,200,180,0.4),
-      inset 0 -2px 4px rgba(0,0,0,0.4),
-      0 10px 24px rgba(200, 60, 40, 0.5);
+      inset 0 1px 0 rgba(255,200,180,0.5),
+      inset 0 -3px 6px rgba(0,0,0,0.5),
+      0 12px 28px rgba(200, 60, 40, 0.55),
+      0 0 0 1px rgba(255,200,160,0.2);
   }
+  .btn-new:hover::after { left: 100%; }
   .btn-new:active { transform: translateY(0); }
 
-  /* ── FEED ── */
-  .feed {
-    max-width: 900px;
-    margin: 0 auto;
+  /* ══════════════════════════════════════════════
+     TABS — деревянные ящики-вкладки
+     ══════════════════════════════════════════════ */
+  .tabs {
+    max-width: 960px;
+    margin: 44px auto 0;
+    padding: 0 20px;
     display: grid;
-    gap: 26px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
   }
 
-  /* ── КОНВЕРТ ── */
+  .tab {
+    position: relative;
+    padding: 26px 20px 22px;
+    border: none;
+    cursor: pointer;
+    background: none;
+    font-family: inherit;
+    text-align: center;
+    transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+    perspective: 800px;
+  }
+
+  .tab-inner {
+    position: relative;
+    padding: 24px 18px 20px;
+    border-radius: 8px 8px 4px 4px;
+    background:
+      linear-gradient(180deg, #4a3c26 0%, #3a2f1e 50%, #2b2215 100%);
+    background-image:
+      linear-gradient(180deg, #4a3c26 0%, #3a2f1e 50%, #2b2215 100%),
+      repeating-linear-gradient(90deg, rgba(0,0,0,0.15) 0px, rgba(0,0,0,0.15) 1px, transparent 1px, transparent 4px);
+    background-blend-mode: multiply;
+    box-shadow:
+      inset 0 2px 0 rgba(255,220,160,0.15),
+      inset 0 -4px 8px rgba(0,0,0,0.5),
+      0 8px 20px rgba(0,0,0,0.55);
+    border: 1px solid rgba(120, 90, 50, 0.4);
+    transition: 0.3s;
+    overflow: hidden;
+  }
+
+  .tab-inner::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, rgba(255,220,160,0.25), transparent);
+  }
+
+  .tab:hover .tab-inner {
+    transform: translateY(-4px);
+    box-shadow:
+      inset 0 2px 0 rgba(255,220,160,0.25),
+      inset 0 -4px 8px rgba(0,0,0,0.5),
+      0 14px 28px rgba(0,0,0,0.7),
+      0 0 30px rgba(200, 140, 80, 0.15);
+  }
+
+  .tab.active .tab-inner {
+    background:
+      linear-gradient(180deg, #5e4a2c 0%, #4a3a22 50%, #3a2c18 100%);
+    box-shadow:
+      inset 0 2px 0 rgba(255,220,160,0.4),
+      inset 0 -4px 8px rgba(0,0,0,0.5),
+      0 16px 32px rgba(0,0,0,0.75),
+      0 0 0 1px var(--gold),
+      0 0 40px rgba(200, 140, 80, 0.4);
+    transform: translateY(-6px);
+  }
+  .tab.active .tab-inner::after {
+    content: '';
+    position: absolute;
+    bottom: -8px; left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 8px;
+    background: radial-gradient(ellipse, rgba(200,140,80,0.5), transparent 70%);
+    filter: blur(3px);
+  }
+
+  .tab-icon {
+    display: block;
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
+  }
+  .tab-title {
+    display: block;
+    font-family: 'Special Elite', serif;
+    font-size: 0.95rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #f0e2c2;
+    margin-bottom: 6px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+  }
+  .tab-sub {
+    display: block;
+    font-family: 'Caveat', cursive;
+    font-size: 1rem;
+    color: #cbb48a;
+    opacity: 0.75;
+    line-height: 1.2;
+  }
+  .tab-badge {
+    position: absolute;
+    top: 10px; right: 12px;
+    min-width: 26px;
+    height: 26px;
+    padding: 0 8px;
+    border-radius: 13px;
+    background: radial-gradient(circle at 35% 30%, #b84040, var(--seal-dark));
+    color: #f4d9b0;
+    font-family: 'Special Elite', serif;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,200,180,0.3);
+    z-index: 2;
+  }
+  .tab.active .tab-badge {
+    background: radial-gradient(circle at 35% 30%, #d4b06a, #8b6a2a);
+  }
+
+  /* ══════════════════════════════════════════════
+     FEED — лента писем
+     ══════════════════════════════════════════════ */
+  .feed {
+    max-width: 960px;
+    margin: 40px auto 0;
+    padding: 0 20px;
+    display: grid;
+    gap: 32px;
+  }
+
+  /* ══════════════════════════════════════════════
+     КОНВЕРТ (письмо)
+     ══════════════════════════════════════════════ */
   .envelope {
+    position: relative;
     background: var(--paper);
     background-image:
-      radial-gradient(ellipse at 10% 10%, rgba(255,255,255,0.5), transparent 30%),
-      radial-gradient(ellipse at 90% 90%, rgba(180,150,100,0.2), transparent 40%),
-      repeating-linear-gradient(0deg, transparent 0px, transparent 27px, rgba(120,90,50,0.05) 27px, rgba(120,90,50,0.05) 28px);
-    border-radius: 4px;
-    padding: 32px 34px 28px;
-    position: relative;
+      radial-gradient(ellipse at 8% 12%, rgba(255,255,255,0.55), transparent 35%),
+      radial-gradient(ellipse at 92% 88%, rgba(180,150,100,0.25), transparent 45%),
+      radial-gradient(ellipse at 50% 50%, rgba(210,180,130,0.15), transparent 70%),
+      repeating-linear-gradient(0deg, transparent 0px, transparent 27px, rgba(120,90,50,0.045) 27px, rgba(120,90,50,0.045) 28px);
+    border-radius: 3px;
+    padding: 36px 38px 32px;
     cursor: pointer;
     box-shadow:
-      0 1px 0 rgba(255,255,255,0.4) inset,
-      0 20px 40px -8px rgba(0,0,0,0.6),
-      0 8px 16px -4px rgba(0,0,0,0.4);
+      0 1px 0 rgba(255,255,255,0.5) inset,
+      0 24px 48px -10px rgba(0,0,0,0.7),
+      0 10px 20px -6px rgba(0,0,0,0.5);
     transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s;
     transform-origin: center;
+    transform: rotate(var(--tilt, 0deg));
+  }
+
+  /* Внутренняя рамка-обводка */
+  .envelope::before {
+    content: '';
+    position: absolute;
+    inset: 12px;
+    border: 1px solid rgba(120, 90, 50, 0.15);
+    border-radius: 2px;
+    pointer-events: none;
   }
 
   /* Загнутый уголок */
@@ -222,175 +464,486 @@
     content: '';
     position: absolute;
     right: 0; bottom: 0;
-    width: 34px; height: 34px;
-    background: linear-gradient(135deg, transparent 50%, var(--paper-shadow) 50%);
-    filter: drop-shadow(-2px -2px 3px rgba(0,0,0,0.15));
+    width: 42px; height: 42px;
+    background: linear-gradient(135deg, transparent 49%, var(--paper-shadow) 50%);
+    filter: drop-shadow(-2px -2px 4px rgba(0,0,0,0.25));
     border-top-left-radius: 4px;
-  }
-
-  /* Клапан конверта сверху */
-  .envelope::before {
-    content: '';
-    position: absolute;
-    left: 0; right: 0; top: 0;
-    height: 6px;
-    background: linear-gradient(90deg, var(--accent), #7d8e63 50%, var(--accent));
-    border-radius: 4px 4px 0 0;
-    opacity: 0.85;
+    z-index: 2;
   }
 
   .envelope:hover {
-    transform: translateY(-6px) rotate(-0.4deg);
+    transform: translateY(-8px) rotate(calc(var(--tilt, 0deg) - 0.5deg));
     box-shadow:
-      0 1px 0 rgba(255,255,255,0.4) inset,
-      0 30px 60px -10px rgba(0,0,0,0.75),
-      0 12px 24px -6px rgba(0,0,0,0.5),
-      0 0 40px rgba(200, 150, 90, 0.15);
-  }
-
-  .envelope.found {
-    background: var(--paper-warm);
-    filter: sepia(0.15);
-  }
-  .envelope.found::before {
-    background: linear-gradient(90deg, var(--seal), #a83535 50%, var(--seal));
+      0 1px 0 rgba(255,255,255,0.5) inset,
+      0 36px 70px -12px rgba(0,0,0,0.85),
+      0 16px 30px -8px rgba(0,0,0,0.6),
+      0 0 60px rgba(220, 160, 90, 0.2);
   }
 
   /* ── МАРКА ── */
   .stamp {
     position: absolute;
-    top: 18px; right: 20px;
-    width: 62px; height: 74px;
-    background:
-      repeating-linear-gradient(45deg, #cdb98e, #cdb98e 5px, #b9a271 5px, #b9a271 10px);
-    border: 2px dashed #7a6538;
-    display: flex; align-items: center; justify-content: center;
+    top: 22px; right: 26px;
+    width: 68px; height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-family: 'Special Elite', serif;
-    font-size: 0.62rem;
-    letter-spacing: 1px;
-    color: #4a3a1a;
+    font-size: 0.6rem;
+    letter-spacing: 1.2px;
     text-align: center;
-    padding: 4px;
+    padding: 6px;
+    color: #4a3a1a;
+    z-index: 3;
     transform: rotate(7deg);
-    box-shadow: 0 3px 6px rgba(0,0,0,0.25);
-    z-index: 2;
+    background:
+      repeating-linear-gradient(45deg, #cdb98e, #cdb98e 6px, #b9a271 6px, #b9a271 12px);
+    border: 2px dashed #7a6538;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
   }
   .stamp::after {
     content: '';
-    position: absolute; inset: 4px;
-    border: 1px solid rgba(120,90,50,0.4);
-  }
-
-  /* ── ПЕЧАТЬ «НАШЛИСЬ» ── */
-  .found-seal {
     position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%) rotate(-12deg);
-    font-family: 'Special Elite', serif;
-    font-size: 1.6rem;
-    letter-spacing: 6px;
-    color: rgba(139, 42, 42, 0.35);
-    border: 3px double rgba(139, 42, 42, 0.4);
-    padding: 10px 24px;
-    border-radius: 6px;
-    pointer-events: none;
-    text-transform: uppercase;
-    z-index: 3;
+    inset: 5px;
+    border: 1px solid rgba(120,90,50,0.45);
   }
+  .stamp.search  { color: #2d4a5e; border-color: #3f5a6e; background: repeating-linear-gradient(45deg, #b8c8d4, #b8c8d4 6px, #a2b4c2 6px, #a2b4c2 12px); }
+  .stamp.wanted  { color: #5e3a2d; border-color: #7e503e; background: repeating-linear-gradient(45deg, #d4b8a8, #d4b8a8 6px, #c2a290 6px, #c2a290 12px); }
+  .stamp.found   { color: #4a5e3a; border-color: #5e7e4a; background: repeating-linear-gradient(45deg, #c0d0a8, #c0d0a8 6px, #a8bc90 6px, #a8bc90 12px); }
 
-  /* ── ТЕКСТ КАРТОЧКИ ── */
+  /* ── ШТЕМПЕЛЬ ── */
+  .postmark {
+    position: absolute;
+    top: 34px; right: 96px;
+    width: 120px; height: 70px;
+    border: 2px solid rgba(45, 74, 94, 0.4);
+    border-radius: 50%;
+    transform: rotate(-14deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Special Elite', serif;
+    font-size: 0.55rem;
+    letter-spacing: 1.5px;
+    color: rgba(45, 74, 94, 0.55);
+    text-align: center;
+    line-height: 1.3;
+    text-transform: uppercase;
+    opacity: 0.7;
+    z-index: 2;
+    pointer-events: none;
+  }
+  .postmark::before,
+  .postmark::after {
+    content: '';
+    position: absolute;
+    left: -18px;
+    width: 14px;
+    height: 1px;
+    background: rgba(45, 74, 94, 0.4);
+  }
+  .postmark::before { top: 24px; }
+  .postmark::after  { bottom: 24px; }
+
+  /* ── ТЕКСТ ── */
+  .envelope .letter-head {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .envelope .number {
+    font-family: 'Special Elite', serif;
+    font-size: 0.68rem;
+    letter-spacing: 1.5px;
+    color: var(--ink-faded);
+    opacity: 0.6;
+  }
   .envelope h3 {
     font-family: 'Cormorant Garamond', serif;
-    font-weight: 600;
-    font-size: 1.45rem;
-    line-height: 1.25;
-    margin-bottom: 10px;
-    padding-right: 80px;
+    font-weight: 700;
+    font-size: 1.5rem;
+    line-height: 1.22;
+    margin-bottom: 12px;
+    padding-right: 200px;
     color: var(--ink);
     letter-spacing: 0.3px;
   }
+  @media (max-width: 720px) { .envelope h3 { padding-right: 90px; } .postmark { display: none; } }
 
   .envelope .meta {
     font-family: 'Special Elite', serif;
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     letter-spacing: 1.5px;
     text-transform: uppercase;
     color: var(--ink-soft);
     opacity: 0.75;
-    margin-bottom: 14px;
+    margin-bottom: 16px;
     display: flex;
     flex-wrap: wrap;
-    gap: 8px 16px;
+    gap: 8px 14px;
     align-items: center;
   }
-  .envelope .meta span { white-space: nowrap; }
   .envelope .meta .dot { opacity: 0.4; }
 
   .envelope .excerpt {
-    font-size: 1.02rem;
-    line-height: 1.6;
-    color: #3a3122;
-    font-style: italic;
     font-family: 'Caveat', cursive;
-    font-size: 1.25rem;
+    font-size: 1.35rem;
     line-height: 1.35;
+    color: #2a2118;
     opacity: 0.95;
+    position: relative;
+    padding-left: 26px;
+  }
+  .envelope .excerpt::before {
+    content: '«';
+    position: absolute;
+    left: 0;
+    top: -8px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.4rem;
+    color: var(--gold);
+    opacity: 0.6;
+    line-height: 1;
   }
 
   /* ── ТЕГ ── */
   .tag {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    margin-top: 18px;
-    padding: 5px 14px 5px 12px;
+    gap: 8px;
+    margin-top: 20px;
+    padding: 6px 16px 6px 14px;
     font-family: 'Special Elite', serif;
     font-size: 0.7rem;
     letter-spacing: 1.5px;
     text-transform: uppercase;
-    background: var(--accent);
+    background: linear-gradient(180deg, var(--accent) 0%, var(--accent-dark) 100%);
     color: var(--paper);
     border-radius: 20px;
     box-shadow:
-      inset 0 1px 0 rgba(255,255,255,0.2),
-      0 3px 8px rgba(0,0,0,0.25);
+      inset 0 1px 0 rgba(255,255,255,0.25),
+      inset 0 -2px 4px rgba(0,0,0,0.3),
+      0 4px 10px rgba(0,0,0,0.3);
   }
   .tag.seal {
-    background: var(--seal);
+    background: linear-gradient(180deg, var(--seal-light) 0%, var(--seal-dark) 100%);
+  }
+  .tag.wanted {
+    background: linear-gradient(180deg, #6e4a3a 0%, #4e2f24 100%);
   }
   .tag::before {
     content: '';
-    width: 6px; height: 6px;
+    width: 7px; height: 7px;
     border-radius: 50%;
-    background: rgba(255,255,255,0.8);
-    box-shadow: 0 0 6px rgba(255,255,255,0.6);
+    background: rgba(255,255,255,0.85);
+    box-shadow: 0 0 8px rgba(255,255,255,0.8);
   }
 
-  /* ── ФУТЕР ── */
+  /* ── Печать «нашлись» ── */
+  .found-seal {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) rotate(-14deg);
+    font-family: 'Special Elite', serif;
+    font-size: 1.8rem;
+    letter-spacing: 8px;
+    color: rgba(139, 42, 42, 0.4);
+    border: 3px double rgba(139, 42, 42, 0.45);
+    padding: 10px 28px;
+    border-radius: 6px;
+    pointer-events: none;
+    text-transform: uppercase;
+    z-index: 4;
+    background: radial-gradient(ellipse, rgba(255,240,220,0.15), transparent 70%);
+    mix-blend-mode: multiply;
+  }
+
+  /* ── Конверт «найден» — приглушённый ── */
+  .envelope.found {
+    background-color: var(--paper-warm);
+    filter: sepia(0.08);
+  }
+
+  /* ── Чернильная клякса (декор) ── */
+  .ink-blot {
+    position: absolute;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(42, 33, 24, 0.15) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* ══════════════════════════════════════════════
+     ПУСТОЕ СОСТОЯНИЕ
+     ══════════════════════════════════════════════ */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #cbb48a;
+    font-family: 'Caveat', cursive;
+    font-size: 1.5rem;
+    opacity: 0.7;
+    grid-column: 1 / -1;
+    line-height: 1.4;
+  }
+  .empty-state::before {
+    content: '📭';
+    display: block;
+    font-size: 3.5rem;
+    margin-bottom: 16px;
+    opacity: 0.6;
+    filter: sepia(0.5);
+  }
+
+  /* ══════════════════════════════════════════════
+     ВКЛАДКА «МЫ С ВАМИ» — история почты
+     ══════════════════════════════════════════════ */
+  .about-block {
+    grid-column: 1 / -1;
+    padding: 0;
+    position: relative;
+  }
+
+  .about-letter {
+    position: relative;
+    background: var(--paper-aged);
+    background-image:
+      radial-gradient(ellipse at 15% 20%, rgba(255,255,255,0.5), transparent 40%),
+      radial-gradient(ellipse at 85% 80%, rgba(140,110,70,0.25), transparent 50%),
+      repeating-linear-gradient(0deg, transparent 0px, transparent 29px, rgba(120,90,50,0.06) 29px, rgba(120,90,50,0.06) 30px);
+    padding: 56px 60px 52px;
+    border-radius: 4px;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.5) inset,
+      0 30px 60px -12px rgba(0,0,0,0.75),
+      0 0 0 1px rgba(120, 90, 50, 0.25);
+    transform: rotate(-0.4deg);
+    color: var(--ink);
+    position: relative;
+  }
+  @media (max-width: 640px) { .about-letter { padding: 38px 26px 34px; } }
+
+  .about-letter::before {
+    content: '';
+    position: absolute;
+    top: 20px; left: 20px; right: 20px; bottom: 20px;
+    border: 1px solid rgba(120, 90, 50, 0.2);
+    pointer-events: none;
+    border-radius: 2px;
+  }
+
+  .about-letter::after {
+    content: '';
+    position: absolute;
+    top: -14px; left: 50%;
+    transform: translateX(-50%);
+    width: 90px; height: 28px;
+    background: linear-gradient(180deg, rgba(200,170,120,0.5), rgba(160,130,80,0.3));
+    border-radius: 2px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+    /* скотч */
+  }
+
+  .about-letter h2 {
+    font-family: 'Special Elite', serif;
+    font-size: 1.7rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 8px;
+    color: var(--ink);
+  }
+  .about-letter .about-sub {
+    text-align: center;
+    font-family: 'Caveat', cursive;
+    font-size: 1.4rem;
+    color: var(--ink-faded);
+    margin-bottom: 34px;
+    opacity: 0.85;
+  }
+  .about-letter .about-sub::before,
+  .about-letter .about-sub::after {
+    content: ' ~ ';
+    color: var(--gold);
+    opacity: 0.6;
+  }
+
+  .about-letter p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    line-height: 1.75;
+    margin-bottom: 20px;
+    color: #2a2118;
+    text-align: justify;
+    hyphens: auto;
+  }
+  .about-letter p.lead {
+    font-family: 'Caveat', cursive;
+    font-size: 1.5rem;
+    line-height: 1.45;
+    text-align: left;
+    color: #3a2f1e;
+    margin-bottom: 30px;
+  }
+  .about-letter p.lead::first-letter {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3.4rem;
+    font-weight: 700;
+    float: left;
+    line-height: 0.9;
+    margin: 4px 10px 0 0;
+    color: var(--seal);
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.1);
+  }
+  .about-letter strong { color: var(--seal-dark); font-weight: 700; }
+  .about-letter em { color: var(--accent-dark); }
+
+  .postmen-title {
+    font-family: 'Special Elite', serif;
+    font-size: 1.05rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-align: center;
+    color: var(--seal-dark);
+    margin: 40px 0 26px;
+    position: relative;
+  }
+  .postmen-title::before,
+  .postmen-title::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 24%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(139, 42, 42, 0.5), transparent);
+  }
+  .postmen-title::before { left: 4%; }
+  .postmen-title::after  { right: 4%; }
+
+  .postmen-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 8px;
+  }
+
+  .postman-card {
+    text-align: center;
+    padding: 24px 18px 20px;
+    border-radius: 6px;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.35), rgba(200,170,120,0.15));
+    border: 1px dashed rgba(120, 90, 50, 0.4);
+    position: relative;
+    transition: 0.3s;
+  }
+  .postman-card:hover {
+    transform: translateY(-4px) rotate(-0.5deg);
+    border-color: var(--gold);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.25);
+  }
+
+  .postman-avatar {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    margin: 0 auto 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    background: radial-gradient(circle at 35% 30%, #c9a86a, #8b6a2a 70%, #5e4520);
+    box-shadow:
+      inset 0 -4px 8px rgba(0,0,0,0.4),
+      inset 0 4px 6px rgba(255,220,160,0.4),
+      0 8px 18px rgba(0,0,0,0.35),
+      0 0 0 3px rgba(255,220,180,0.15);
+    position: relative;
+  }
+  .postman-avatar::after {
+    content: '';
+    position: absolute;
+    inset: -5px;
+    border-radius: 50%;
+    border: 1px dashed rgba(120, 90, 50, 0.4);
+  }
+
+  .postman-card h4 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--ink);
+    margin-bottom: 6px;
+    letter-spacing: 0.3px;
+  }
+  .postman-card .role {
+    font-family: 'Special Elite', serif;
+    font-size: 0.66rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--seal);
+    opacity: 0.85;
+    margin-bottom: 10px;
+  }
+  .postman-card .desc {
+    font-family: 'Caveat', cursive;
+    font-size: 1.1rem;
+    color: var(--ink-faded);
+    line-height: 1.3;
+  }
+
+  .about-signature {
+    margin-top: 40px;
+    text-align: right;
+    font-family: 'Marck Script', cursive;
+    font-size: 1.6rem;
+    color: var(--seal-dark);
+    opacity: 0.85;
+    line-height: 1.2;
+  }
+  .about-signature small {
+    display: block;
+    font-family: 'Special Elite', serif;
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ink-faded);
+    opacity: 0.7;
+    margin-top: 4px;
+  }
+
+  /* ══════════════════════════════════════════════
+     FOOTER
+     ══════════════════════════════════════════════ */
   footer {
-    max-width: 900px;
-    margin: 60px auto 0;
+    max-width: 960px;
+    margin: 70px auto 0;
+    padding: 0 20px;
     text-align: center;
     color: #9a8a6a;
     font-family: 'Caveat', cursive;
-    font-size: 1.15rem;
+    font-size: 1.2rem;
     opacity: 0.7;
     position: relative;
   }
   footer::before {
     content: '❦';
     display: block;
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     margin-bottom: 8px;
     opacity: 0.5;
     color: var(--gold);
   }
 
-  /* ── МОДАЛКИ ── */
+  /* ══════════════════════════════════════════════
+     МОДАЛКИ
+     ══════════════════════════════════════════════ */
   .modal-bg {
     position: fixed; inset: 0;
-    background: rgba(0,0,0,0.85);
-    backdrop-filter: blur(8px);
+    background: rgba(0,0,0,0.88);
+    backdrop-filter: blur(10px);
     display: none;
     align-items: center;
     justify-content: center;
@@ -404,62 +957,66 @@
   .modal {
     background: var(--paper);
     background-image:
-      radial-gradient(ellipse at 20% 0%, rgba(255,255,255,0.6), transparent 40%),
+      radial-gradient(ellipse at 20% 0%, rgba(255,255,255,0.65), transparent 45%),
+      radial-gradient(ellipse at 80% 100%, rgba(180,150,100,0.2), transparent 50%),
       repeating-linear-gradient(0deg, transparent 0px, transparent 29px, rgba(120,90,50,0.06) 29px, rgba(120,90,50,0.06) 30px);
-    max-width: 620px;
+    max-width: 660px;
     width: 100%;
     max-height: 88vh;
     overflow-y: auto;
-    padding: 46px 44px 40px;
-    border-radius: 4px;
+    padding: 52px 48px 44px;
+    border-radius: 3px;
     box-shadow:
       0 1px 0 rgba(255,255,255,0.5) inset,
-      0 30px 80px rgba(0,0,0,0.9),
-      0 0 0 1px rgba(120,90,50,0.3);
+      0 40px 100px rgba(0,0,0,0.95),
+      0 0 0 1px rgba(120,90,50,0.35);
     position: relative;
-    animation: modalIn 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+    animation: modalIn 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.15);
   }
   @keyframes modalIn {
-    from { opacity: 0; transform: scale(0.92) rotate(-1deg); }
+    from { opacity: 0; transform: scale(0.9) rotate(-1.5deg); }
     to   { opacity: 1; transform: scale(1) rotate(0deg); }
   }
+  @media (max-width: 600px) { .modal { padding: 40px 24px 32px; } }
 
   .modal::before {
     content: '';
     position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 8px;
-    background: linear-gradient(90deg, var(--seal), #a83535 50%, var(--seal));
+    top: 14px; left: 14px; right: 14px; bottom: 14px;
+    border: 1px solid rgba(120, 90, 50, 0.2);
+    pointer-events: none;
   }
 
   .modal .close {
     position: absolute;
-    top: 18px; right: 20px;
-    width: 36px; height: 36px;
+    top: 20px; right: 22px;
+    width: 40px; height: 40px;
     border-radius: 50%;
     background: rgba(139, 42, 42, 0.1);
-    border: 1px solid rgba(139, 42, 42, 0.3);
+    border: 1px solid rgba(139, 42, 42, 0.35);
     font-size: 1.3rem;
     cursor: pointer;
     color: var(--seal);
-    transition: 0.25s;
+    transition: 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.5);
     display: flex; align-items: center; justify-content: center;
     line-height: 1;
+    z-index: 3;
   }
   .modal .close:hover {
     background: var(--seal);
     color: var(--paper);
-    transform: rotate(90deg);
+    transform: rotate(180deg) scale(1.1);
   }
 
   .modal h2 {
     font-family: 'Cormorant Garamond', serif;
-    font-weight: 600;
-    font-size: 1.9rem;
+    font-weight: 700;
+    font-size: 2rem;
     line-height: 1.2;
-    margin-bottom: 14px;
+    margin-bottom: 16px;
     color: var(--ink);
     letter-spacing: 0.3px;
+    padding-right: 40px;
   }
 
   .modal .meta {
@@ -469,52 +1026,66 @@
     text-transform: uppercase;
     color: var(--ink-soft);
     opacity: 0.75;
-    margin-bottom: 22px;
+    margin-bottom: 24px;
   }
 
   .modal .body {
     font-family: 'Caveat', cursive;
-    font-size: 1.35rem;
-    line-height: 1.45;
+    font-size: 1.42rem;
+    line-height: 1.42;
     color: #2a2118;
-    margin-bottom: 28px;
+    margin-bottom: 30px;
     white-space: pre-wrap;
+  }
+  .modal .body::first-letter {
+    font-size: 2.6rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    color: var(--seal);
+    float: left;
+    line-height: 0.9;
+    margin: 4px 8px 0 0;
   }
 
   .modal .actions {
     display: flex;
     gap: 12px;
     flex-wrap: wrap;
-    padding-top: 20px;
-    border-top: 1px dashed rgba(120, 90, 50, 0.35);
+    padding-top: 22px;
+    border-top: 1px dashed rgba(120, 90, 50, 0.4);
   }
-
   .modal .actions button {
     flex: 1;
     min-width: 160px;
-    padding: 13px 20px;
+    padding: 14px 22px;
     border: none;
     border-radius: 6px;
     font-family: 'Special Elite', serif;
-    font-size: 0.82rem;
-    letter-spacing: 1.2px;
+    font-size: 0.8rem;
+    letter-spacing: 1.3px;
     text-transform: uppercase;
     cursor: pointer;
     transition: 0.25s;
     color: #f4e2bc;
   }
   .btn-contact {
-    background: linear-gradient(180deg, #a83535, var(--seal-dark));
-    box-shadow: inset 0 1px 0 rgba(255,200,180,0.3), 0 6px 16px rgba(0,0,0,0.35);
+    background: linear-gradient(180deg, #b84040, var(--seal-dark));
+    box-shadow: inset 0 1px 0 rgba(255,200,180,0.4), inset 0 -3px 6px rgba(0,0,0,0.4), 0 8px 18px rgba(0,0,0,0.4);
   }
-  .btn-contact:hover { transform: translateY(-2px); box-shadow: inset 0 1px 0 rgba(255,200,180,0.3), 0 10px 22px rgba(200,60,40,0.5); }
+  .btn-contact:hover {
+    transform: translateY(-2px);
+    box-shadow: inset 0 1px 0 rgba(255,200,180,0.4), inset 0 -3px 6px rgba(0,0,0,0.4), 0 12px 24px rgba(200,60,40,0.55);
+  }
   .btn-found {
     background: linear-gradient(180deg, #6d7f57, #4a5738);
-    box-shadow: inset 0 1px 0 rgba(220,255,200,0.25), 0 6px 16px rgba(0,0,0,0.35);
+    box-shadow: inset 0 1px 0 rgba(220,255,200,0.3), inset 0 -3px 6px rgba(0,0,0,0.4), 0 8px 18px rgba(0,0,0,0.4);
   }
-  .btn-found:hover { transform: translateY(-2px); box-shadow: inset 0 1px 0 rgba(220,255,200,0.25), 0 10px 22px rgba(90,120,60,0.5); }
+  .btn-found:hover {
+    transform: translateY(-2px);
+    box-shadow: inset 0 1px 0 rgba(220,255,200,0.3), inset 0 -3px 6px rgba(0,0,0,0.4), 0 12px 24px rgba(90,120,60,0.55);
+  }
 
-  /* ── ФОРМА ── */
+  /* ── Форма ── */
   .form-modal label {
     display: block;
     font-family: 'Special Elite', serif;
@@ -529,13 +1100,13 @@
   .form-modal textarea,
   .form-modal select {
     width: 100%;
-    padding: 11px 14px;
-    margin-bottom: 16px;
+    padding: 12px 14px;
+    margin-bottom: 18px;
     border: none;
-    border-bottom: 1.5px solid rgba(120, 90, 50, 0.35);
+    border-bottom: 1.5px solid rgba(120, 90, 50, 0.4);
     background: transparent;
     font-family: 'Caveat', cursive;
-    font-size: 1.2rem;
+    font-size: 1.28rem;
     color: var(--ink);
     transition: 0.25s;
     border-radius: 0;
@@ -545,55 +1116,135 @@
   .form-modal select:focus {
     outline: none;
     border-bottom-color: var(--seal);
-    background: rgba(139, 42, 42, 0.04);
+    background: rgba(139, 42, 42, 0.045);
   }
   .form-modal textarea {
-    min-height: 130px;
+    min-height: 140px;
     resize: vertical;
     line-height: 1.4;
   }
   .form-modal select { cursor: pointer; }
 
-  /* ── АДАПТИВ ── */
-  @media (max-width: 600px) {
-    body { padding: 24px 14px 60px; }
-    header h1 { letter-spacing: 4px; }
-    .envelope { padding: 24px 22px 22px; }
-    .envelope h3 { font-size: 1.2rem; padding-right: 62px; }
-    .stamp { width: 48px; height: 56px; font-size: 0.55rem; top: 14px; right: 14px; }
-    .modal { padding: 34px 24px 28px; }
-    .modal h2 { font-size: 1.5rem; }
+  /* ══════════════════════════════════════════════
+     АДАПТИВ
+     ══════════════════════════════════════════════ */
+  @media (max-width: 720px) {
+    header { padding: 34px 16px 20px; }
+    header h1 { letter-spacing: 6px; }
+    .logo-mark { width: 68px; height: 68px; }
+    .logo-mark::before { font-size: 28px; }
+
+    .tabs {
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 30px;
+    }
+    .tab { padding: 14px 10px 10px; }
+    .tab-inner { padding: 18px 14px 16px; }
+    .tab-icon { font-size: 1.4rem; margin-bottom: 6px; }
+    .tab-title { font-size: 0.85rem; }
+    .tab-sub { font-size: 0.9rem; }
+
+    .envelope { padding: 26px 22px 24px; }
+    .envelope h3 { font-size: 1.25rem; padding-right: 90px; }
+    .stamp { width: 52px; height: 62px; font-size: 0.5rem; top: 16px; right: 16px; }
+    .envelope .excerpt { font-size: 1.15rem; }
+    .found-seal { font-size: 1.1rem; letter-spacing: 5px; padding: 8px 16px; }
+
+    .hero-quote { font-size: 1.3rem; }
+    .modal { padding: 38px 22px 30px; }
+    .modal h2 { font-size: 1.5rem; padding-right: 30px; }
     .modal .body { font-size: 1.2rem; }
-    .found-seal { font-size: 1.1rem; letter-spacing: 4px; padding: 8px 16px; }
+    .toolbar input { min-width: 100%; }
+    .btn-new { width: 100%; }
   }
+
+  /* ── Анимация появления ── */
+  .envelope, .about-letter {
+    animation: riseIn 0.7s cubic-bezier(0.2, 0.9, 0.3, 1) backwards;
+  }
+  @keyframes riseIn {
+    from { opacity: 0; transform: translateY(30px) rotate(var(--tilt, 0deg)); }
+    to   { opacity: 1; transform: translateY(0) rotate(var(--tilt, 0deg)); }
+  }
+
+  /* Скроллбар */
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #6e4a2a, #3a2c18);
+    border-radius: 5px;
+    border: 1px solid rgba(200, 160, 90, 0.2);
+  }
+  ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #8e6a3a, #4a3c22); }
 </style>
 </head>
 <body>
 
 <div class="vignette"></div>
 
+<!-- ═══════════ ШАПКА ═══════════ -->
 <header>
   <div class="logo-mark"></div>
-  <h1>FIND&nbsp;ME</h1>
-  <p>Письма, которые ищут своего адресата</p>
+  <h1>FIND<span class="dot">·</span>ME</h1>
+  <p class="subtitle">Почтовое отделение, где письма находят адресата</p>
+  <div class="header-ornament">
+    <span>ОСНОВАНО ЛЮДЬМИ, КОТОРЫЕ ПОТЕРЯЛИ</span>
+  </div>
 </header>
 
+<!-- ═══════════ ЦИТАТА ═══════════ -->
+<section class="hero">
+  <p class="hero-quote">Иногда достаточно одного письма, чтобы вернуть целую жизнь.</p>
+</section>
+
+<!-- ═══════════ ПАНЕЛЬ УПРАВЛЕНИЯ ═══════════ -->
 <div class="toolbar">
   <input id="search" placeholder="Поиск по имени, городу, приметам…">
   <select id="filter">
     <option value="all">Все письма</option>
-    <option value="search">Я ищу</option>
+    <option value="search">Ищу человека</option>
     <option value="wanted">Ищут меня</option>
-    <option value="found">Уже нашлись</option>
+    <option value="found">Нашлись</option>
   </select>
   <button class="btn-new" onclick="openForm()">✍ Написать письмо</button>
 </div>
 
+<!-- ═══════════ ВКЛАДКИ ═══════════ -->
+<nav class="tabs" id="tabs">
+  <button class="tab active" data-tab="searching">
+    <div class="tab-inner">
+      <span class="tab-badge" id="badge-searching">0</span>
+      <span class="tab-icon">🔍</span>
+      <span class="tab-title">Я ищу тебя</span>
+      <span class="tab-sub">актуальные письма</span>
+    </div>
+  </button>
+
+  <button class="tab" data-tab="found">
+    <div class="tab-inner">
+      <span class="tab-badge" id="badge-found">0</span>
+      <span class="tab-icon">📬</span>
+      <span class="tab-title">Я найден</span>
+      <span class="tab-sub">письма дошли</span>
+    </div>
+  </button>
+
+  <button class="tab" data-tab="about">
+    <div class="tab-inner">
+      <span class="tab-icon">✒️</span>
+      <span class="tab-title">Мы с вами</span>
+      <span class="tab-sub">зачем этот сайт</span>
+    </div>
+  </button>
+</nav>
+
+<!-- ═══════════ ЛЕНТА ═══════════ -->
 <main class="feed" id="feed"></main>
 
 <footer>Find Me — тёплое место, где встречи случаются снова</footer>
 
-<!-- Просмотр письма -->
+<!-- ═══════════ МОДАЛКА ПРОСМОТРА ═══════════ -->
 <div class="modal-bg" id="viewModal">
   <div class="modal">
     <button class="close" onclick="closeModal('viewModal')">✕</button>
@@ -601,13 +1252,13 @@
     <div class="meta" id="m-meta"></div>
     <div class="body" id="m-body"></div>
     <div class="actions">
-      <button class="btn-contact" onclick="alert('Здесь будет форма связи с автором.')">✉ Я знаю этого человека</button>
-      <button class="btn-found" onclick="alert('Отмечено как «нашлись». Спасибо!')">🤝 Мы нашлись</button>
+      <button class="btn-contact" onclick="alert('Здесь будет форма связи с автором.\nЕсли ты знаешь человека — напиши, и почтальон Find Me доставит письмо.')">✉ Я знаю этого человека</button>
+      <button class="btn-found" onclick="alert('Спасибо! Письмо отмечено как «доставлено». Это поможет другим.')">🤝 Мы нашлись</button>
     </div>
   </div>
 </div>
 
-<!-- Новое письмо -->
+<!-- ═══════════ МОДАЛКА НОВОГО ПИСЬМА ═══════════ -->
 <div class="modal-bg" id="formModal">
   <div class="modal form-modal">
     <button class="close" onclick="closeModal('formModal')">✕</button>
@@ -630,6 +1281,7 @@
 </div>
 
 <script>
+  /* ═══════════ ДАННЫЕ ═══════════ */
   const posts = [
     {
       id: 1, type: 'search',
@@ -648,59 +1300,226 @@
       status: 'open'
     },
     {
-      id: 3, type: 'found',
+      id: 3, type: 'search',
+      title: 'Ищу соседа, который спас меня на пожаре',
+      city: 'Пермь', years: '2008',
+      author: 'Мария С.', date: 'неделю назад',
+      body: `В ноябре 2008 года горел наш дом на улице Мира. Меня вынес сосед с пятого этажа — молодой мужчина, звали, кажется, Андрей. Он потом уехал, я не успела даже поблагодарить.\n\nПомню: высокий, светлые волосы, играл на гитаре у подъезда по вечерам.`,
+      status: 'open'
+    },
+    {
+      id: 4, type: 'found',
       title: 'Нашёл школьную учительницу!',
       city: 'Санкт-Петербург', years: '1988–1994',
       author: 'Ольга В.', date: 'неделю назад',
       body: `Писала сюда про Марию Ивановну из школы №117. Через три месяца откликнулась её дочь. Мы встретились в июне.\n\nСпасибо всем, кто откликался и делился.`,
       status: 'found'
+    },
+    {
+      id: 5, type: 'found',
+      title: 'Сестра нашлась спустя 22 года',
+      city: 'Алматы', years: '1999–2021',
+      author: 'Тимур Ж.', date: '2 недели назад',
+      body: `Мы потеряли связь с сестрой в 1999, когда семья переехала. Писал сюда в прошлом году. Одно из писем совпало — по родинке и старому адресу.\n\nЛетом мы встретились. Не теряйте надежду.`,
+      status: 'found'
     }
   ];
 
+  /* ═══════════ СОСТОЯНИЕ ═══════════ */
+  let currentTab = 'searching';
   const feed = document.getElementById('feed');
 
-  function render() {
+  /* ═══════════ ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК ═══════════ */
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      currentTab = tab.dataset.tab;
+      render();
+    });
+  });
+
+  /* ═══════════ ОБНОВЛЕНИЕ БЕЙДЖЕЙ ═══════════ */
+  function updateBadges() {
+    const searching = posts.filter(p => p.status === 'open').length;
+    const found = posts.filter(p => p.status === 'found').length;
+    document.getElementById('badge-searching').textContent = searching;
+    document.getElementById('badge-found').textContent = found;
+  }
+
+  /* ═══════════ ПОЛУЧИТЬ ОТФИЛЬТРОВАННЫЕ ═══════════ */
+  function getFiltered() {
     const q = document.getElementById('search').value.toLowerCase().trim();
     const f = document.getElementById('filter').value;
 
-    const filtered = posts.filter(p => {
+    let list;
+    if (currentTab === 'searching') {
+      list = posts.filter(p => p.status === 'open');
+    } else if (currentTab === 'found') {
+      list = posts.filter(p => p.status === 'found');
+    } else {
+      return [];
+    }
+
+    return list.filter(p => {
       const matchQ = !q ||
         p.title.toLowerCase().includes(q) ||
         p.city.toLowerCase().includes(q) ||
         p.body.toLowerCase().includes(q);
-      const matchF = f === 'all' || p.type === f || (f === 'found' && p.status === 'found');
+      const matchF = f === 'all' || p.type === f;
       return matchQ && matchF;
     });
-
-    feed.innerHTML = filtered.map(p => {
-      const isFound = p.status === 'found';
-      const tagClass = isFound ? 'seal' : '';
-      const tagText = p.type === 'search' ? 'Ищу'
-                     : p.type === 'wanted' ? 'Ищут меня'
-                     : 'Нашлись';
-      const excerpt = p.body.replace(/\n+/g, ' ').slice(0, 155);
-
-      return `
-        <article class="envelope ${isFound ? 'found' : ''}" onclick="openPost(${p.id})">
-          <div class="stamp">${isFound ? 'НАШЛИСЬ' : 'ПИСЬМО'}</div>
-          ${isFound ? '<div class="found-seal">Нашлись</div>' : ''}
-          <h3>${p.title}</h3>
-          <div class="meta">
-            <span>${p.author}</span>
-            <span class="dot">·</span>
-            <span>${p.city}</span>
-            <span class="dot">·</span>
-            <span>${p.years}</span>
-            <span class="dot">·</span>
-            <span>${p.date}</span>
-          </div>
-          <div class="excerpt">«${excerpt}…»</div>
-          <span class="tag ${tagClass}">${tagText}</span>
-        </article>
-      `;
-    }).join('') || '<p style="color:#cbb48a;text-align:center;grid-column:1/-1;font-family:\'Caveat\',cursive;font-size:1.4rem;opacity:0.7;">Писем пока нет…</p>';
   }
 
+  /* ═══════════ РЕНДЕР ═══════════ */
+  function render() {
+    if (currentTab === 'about') {
+      feed.innerHTML = renderAbout();
+      return;
+    }
+
+    const list = getFiltered();
+
+    if (list.length === 0) {
+      feed.innerHTML = `
+        <div class="empty-state">
+          ${currentTab === 'searching'
+            ? 'Пока никого не ищут.<br>Может, твоё письмо станет первым?'
+            : 'Здесь пока пусто.<br>Но хорошие новости обязательно придут.'}
+        </div>`;
+      return;
+    }
+
+    feed.innerHTML = list.map((p, i) => renderEnvelope(p, i)).join('');
+  }
+
+  function renderEnvelope(p, i) {
+    const isFound = p.status === 'found';
+    const tilt = (Math.random() * 1.2 - 0.6).toFixed(2);
+    const num = String(p.id).padStart(4, '0');
+
+    const stampClass = p.type === 'search' ? 'search'
+                     : p.type === 'wanted' ? 'wanted'
+                     : 'found';
+    const stampText = p.type === 'search' ? 'ИЩУ'
+                    : p.type === 'wanted' ? 'ОТКЛИК'
+                    : 'НАШЛИСЬ';
+
+    const tagClass = isFound ? 'seal' : (p.type === 'wanted' ? 'wanted' : '');
+    const tagText = p.type === 'search' ? '🔍 Ищу человека'
+                   : p.type === 'wanted' ? '📬 Ищут меня'
+                   : '🤝 Мы нашлись';
+
+    const excerpt = p.body.replace(/\n+/g, ' ').slice(0, 165);
+
+    // Псевдо-случайная чернильная клякса
+    const blotPos = i % 3 === 0
+      ? '<span class="ink-blot" style="top:60%;left:8%;"></span>'
+      : i % 3 === 1
+      ? '<span class="ink-blot" style="top:20%;right:15%;width:30px;height:30px;"></span>'
+      : '';
+
+    return `
+      <article class="envelope ${isFound ? 'found' : ''}"
+               style="--tilt: ${tilt}deg; animation-delay: ${i * 0.08}s;"
+               onclick="openPost(${p.id})">
+        ${blotPos}
+        <div class="stamp ${stampClass}">${stampText}</div>
+        <div class="postmark">
+          FIND·ME<br>ОТДЕЛЕНИЕ<br>№${num}
+        </div>
+        ${isFound ? '<div class="found-seal">Доставлено</div>' : ''}
+        <div class="letter-head">
+          <span class="number">ПИСЬМО №${num}</span>
+        </div>
+        <h3>${p.title}</h3>
+        <div class="meta">
+          <span>${p.author}</span>
+          <span class="dot">·</span>
+          <span>${p.city}</span>
+          <span class="dot">·</span>
+          <span>${p.years}</span>
+          <span class="dot">·</span>
+          <span>${p.date}</span>
+        </div>
+        <div class="excerpt">${excerpt}…»</div>
+        <span class="tag ${tagClass}">${tagText}</span>
+      </article>
+    `;
+  }
+
+  /* ═══════════ ВКЛАДКА «МЫ С ВАМИ» ═══════════ */
+  function renderAbout() {
+    return `
+      <div class="about-block">
+        <div class="about-letter">
+          <h2>Мы с вами</h2>
+          <p class="about-sub">зачем существует Find Me</p>
+
+          <p class="lead">
+            Этот сайт придумали люди, которые сами кого-то потеряли. Мы не знаем, кого ищете вы — брата, маму, школьного друга, соседа, спасшего вам жизнь. Но мы точно знаем одно: пока о человеке помнят и пишут — он не потерян.
+          </p>
+
+          <p>
+            <strong>Find Me</strong> — это не социальная сеть. Здесь нельзя лайкать, подписываться, комментировать чужие жизни. Здесь можно только одно: написать письмо. Короткое, честное, с теми деталями, которые помнишь только ты. Родинка под левым глазом. Песня, которую он всегда пел. Запах пирогов на кухне. Марка на конверте.
+          </p>
+
+          <p>
+            Мы просим писать только то, что вы <em>точно</em> знаете. Никаких догадок, обвинений, предположений. Каждое письмо — это факт, за который вы отвечаете. Так письма не превращаются в сплетни, а остаются тем, чем были задуманы: тёплой весточкой в нужные руки.
+          </p>
+
+          <p>
+            Когда письмо находит адресата, оно не исчезает. Оно переезжает в раздел <strong>«Я найден»</strong> — как конверт со штампом «Доставлено». Чтобы те, кто ещё ищет, видели: это возможно. Чтобы не сдавались.
+          </p>
+
+          <div class="postmen-title">Наши почтальоны</div>
+
+          <p>
+            У Find Me есть команда почтальонов — обычные люди, которые каждый день просматривают новые письма и помогают им найти адресата. Они не всевидящие, но у них есть то, чего нет у алгоритмов: <em>внимание</em>. Они замечают совпадения, связывают истории, пишут в обе стороны.
+          </p>
+
+          <div class="postmen-grid">
+            <div class="postman-card">
+              <div class="postman-avatar">📮</div>
+              <h4>Сортировщик</h4>
+              <div class="role">Отдел «Я ищу тебя»</div>
+              <p class="desc">Читает каждое новое письмо и проверяет, нет ли похожего в других разделах.</p>
+            </div>
+            <div class="postman-card">
+              <div class="postman-avatar">🕵️</div>
+              <h4>Связной</h4>
+              <div class="role">Отдел совпадений</div>
+              <p class="desc">Сопоставляет детали: имена, даты, города, приметы. Ищет пересечения в историях.</p>
+            </div>
+            <div class="postman-card">
+              <div class="postman-avatar">✒️</div>
+              <h4>Переписчик</h4>
+              <div class="role">Отдел связи</div>
+              <p class="desc">Пишет обеим сторонам, если нашёл совпадение — аккуратно, без давления.</p>
+            </div>
+            <div class="postman-card">
+              <div class="postman-avatar">🕊️</div>
+              <h4>Хранитель</h4>
+              <div class="role">Отдел памяти</div>
+              <p class="desc">Следит, чтобы письма не терялись. Переносит доставленные — в архив «Я найден».</p>
+            </div>
+          </div>
+
+          <p style="margin-top: 34px;">
+            Мы не обещаем, что каждое письмо найдёт своего человека завтра. Иногда на это уходят годы. Но мы обещаем, что <strong>каждое письмо будет прочитано</strong>, а каждый, кого ищут, — услышан. Даже если сегодня ответа нет, он придёт. Так бывает. Так уже бывало много раз.
+          </p>
+
+          <div class="about-signature">
+            С уважением и надеждой,<br>
+            почтальоны Find Me
+            <small>Отделение №1 · Письма, которые ищут адресата</small>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  /* ═══════════ МОДАЛКА ═══════════ */
   function openPost(id) {
     const p = posts.find(x => x.id === id);
     document.getElementById('m-title').textContent = p.title;
@@ -728,11 +1547,21 @@
 
     ['f-title','f-city','f-years','f-body'].forEach(id => document.getElementById(id).value = '');
     closeModal('formModal');
+    updateBadges();
+
+    // Переключаемся на «Я ищу тебя», если были в других разделах
+    if (currentTab !== 'searching') {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelector('[data-tab="searching"]').classList.add('active');
+      currentTab = 'searching';
+    }
     render();
   }
 
+  /* ═══════════ СОБЫТИЯ ═══════════ */
   document.getElementById('search').addEventListener('input', render);
   document.getElementById('filter').addEventListener('change', render);
+
   document.querySelectorAll('.modal-bg').forEach(bg => {
     bg.addEventListener('click', e => { if (e.target === bg) bg.classList.remove('active'); });
   });
@@ -740,6 +1569,8 @@
     if (e.key === 'Escape') document.querySelectorAll('.modal-bg.active').forEach(m => m.classList.remove('active'));
   });
 
+  /* ═══════════ СТАРТ ═══════════ */
+  updateBadges();
   render();
 </script>
 </body>
