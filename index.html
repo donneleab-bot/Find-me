@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find Me — найди того, кто дорог</title>
+<style>
+  :root {
+    --paper: #f5ecd9;
+    --paper-dark: #e8dcc0;
+    --ink: #2b2419;
+    --seal: #8b2e2e;
+    --accent: #6b7d5a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Georgia', serif;
+    background: #3a3226;
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(255,255,255,0.04) 0%, transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(255,255,255,0.03) 0%, transparent 40%);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  header {
+    max-width: 900px;
+    margin: 0 auto 30px;
+    text-align: center;
+    color: var(--paper);
+  }
+  header h1 {
+    font-size: 2.6rem;
+    letter-spacing: 4px;
+    margin-bottom: 8px;
+  }
+  header p { font-style: italic; opacity: 0.85; }
+
+  .toolbar {
+    max-width: 900px;
+    margin: 0 auto 25px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .toolbar input,
+  .toolbar select,
+  .toolbar button {
+    padding: 10px 14px;
+    border: none;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 0.95rem;
+  }
+  .toolbar input { flex: 1; min-width: 200px; }
+  .toolbar button {
+    background: var(--seal);
+    color: var(--paper);
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .toolbar button:hover { background: #6e2222; }
+
+  .feed {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    gap: 20px;
+  }
+
+  .envelope {
+    background: var(--paper);
+    border-radius: 6px;
+    padding: 22px 26px;
+    position: relative;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+    cursor: pointer;
+    transition: transform 0.25s, box-shadow 0.25s;
+    border-left: 6px solid var(--accent);
+  }
+  .envelope:hover {
+    transform: translateY(-3px) rotate(-0.3deg);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.5);
+  }
+  .envelope.found {
+    border-left-color: var(--seal);
+    opacity: 0.8;
+    background: var(--paper-dark);
+  }
+  .envelope .stamp {
+    position: absolute;
+    top: 14px; right: 14px;
+    width: 56px; height: 66px;
+    background: repeating-linear-gradient(45deg, #d9cba8, #d9cba8 4px, #cbbb90 4px, #cbbb90 8px);
+    border: 2px dashed #8a7a52;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; text-align: center;
+    color: #5a4a2a;
+    transform: rotate(6deg);
+  }
+  .envelope h3 {
+    font-size: 1.15rem;
+    margin-bottom: 6px;
+    padding-right: 70px;
+  }
+  .envelope .meta {
+    font-size: 0.8rem;
+    color: #6b5c40;
+    font-style: italic;
+    margin-bottom: 10px;
+  }
+  .envelope .excerpt {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #3a3122;
+  }
+  .envelope .tag {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 3px 10px;
+    font-size: 0.75rem;
+    background: var(--accent);
+    color: var(--paper);
+    border-radius: 12px;
+  }
+  .envelope .tag.seal { background: var(--seal); }
+
+  .modal-bg {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.75);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 100;
+  }
+  .modal-bg.active { display: flex; }
+
+  .modal {
+    background: var(--paper);
+    max-width: 600px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 36px;
+    border-radius: 6px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+    position: relative;
+  }
+  .modal h2 { margin-bottom: 12px; }
+  .modal .meta { font-style: italic; color: #6b5c40; margin-bottom: 18px; font-size: 0.9rem; }
+  .modal .body { line-height: 1.7; margin-bottom: 22px; white-space: pre-wrap; }
+  .modal .close {
+    position: absolute; top: 14px; right: 18px;
+    background: none; border: none;
+    font-size: 1.6rem; cursor: pointer; color: #6b5c40;
+  }
+  .modal .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  .modal .actions button {
+    padding: 10px 18px;
+    border: none; border-radius: 4px;
+    font-family: inherit; cursor: pointer; font-size: 0.9rem;
+  }
+  .btn-contact { background: var(--seal); color: var(--paper); }
+  .btn-found { background: var(--accent); color: var(--paper); }
+
+  .form-modal input,
+  .form-modal textarea,
+  .form-modal select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 12px;
+    border: 1px solid #c9b98d;
+    border-radius: 4px;
+    font-family: inherit;
+    background: #fdf9ee;
+    font-size: 0.95rem;
+  }
+  .form-modal textarea { min-height: 120px; resize: vertical; }
+  .form-modal label { font-size: 0.85rem; color: #5a4a2a; display: block; margin-bottom: 4px; }
+
+  footer {
+    max-width: 900px;
+    margin: 40px auto 0;
+    text-align: center;
+    color: var(--paper);
+    opacity: 0.6;
+    font-size: 0.85rem;
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>✉ Find Me</h1>
+  <p>Напиши письмо тому, кого потерял. Возможно, оно уже ждёт ответа.</p>
+</header>
+
+<div class="toolbar">
+  <input id="search" placeholder="Поиск по имени, городу, приметам...">
+  <select id="filter">
+    <option value="all">Все письма</option>
+    <option value="search">Ищу человека</option>
+    <option value="wanted">Ищут меня</option>
+    <option value="found">Уже нашлись</option>
+  </select>
+  <button onclick="openForm()">✍ Написать письмо</button>
+</div>
+
+<main class="feed" id="feed"></main>
+
+<footer>Find Me — тёплое место, где встречи случаются снова.</footer>
+
+<div class="modal-bg" id="viewModal">
+  <div class="modal">
+    <button class="close" onclick="closeModal('viewModal')">✕</button>
+    <h2 id="m-title"></h2>
+    <div class="meta" id="m-meta"></div>
+    <div class="body" id="m-body"></div>
+    <div class="actions">
+      <button class="btn-contact" onclick="alert('Здесь будет форма связи.')">✉ Я знаю этого человека</button>
+      <button class="btn-found" onclick="alert('Отмечено как «нашлись».')">🤝 Мы нашлись</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="formModal">
+  <div class="modal form-modal">
+    <button class="close" onclick="closeModal('formModal')">✕</button>
+    <h2>Новое письмо</h2>
+    <label>Тип</label>
+    <select id="f-type">
+      <option value="search">Я ищу человека</option>
+      <option value="wanted">Меня ищут (отклик)</option>
+    </select>
+    <label>Заголовок</label>
+    <input id="f-title" placeholder="Ищу одноклассницу Марину из Твери">
+    <label>Город / место</label>
+    <input id="f-city" placeholder="Где это было">
+    <label>Годы / период</label>
+    <input id="f-years" placeholder="1998–2003">
+    <label>Что ты знаешь (только факты)</label>
+    <textarea id="f-body" placeholder="Пиши только то, что помнишь точно..."></textarea>
+    <button class="btn-contact" style="width:100%" onclick="addPost()">📮 Отправить письмо</button>
+  </div>
+</div>
+
+<script>
+  const posts = [
+    {
+      id: 1, type: 'search',
+      title: 'Ищу брата, потерянного в 90-х',
+      city: 'Красноярск', years: '1996–1999',
+      author: 'Анна К.', date: '2 дня назад',
+      body: `Ищу старшего брата Дмитрия. В 1997 году его усыновила семья из Красноярска, когда нам было 6 и 9 лет. Помню: у него была родинка под левым глазом, он собирал модели самолётов.\n\nНаша мама умерла в 2003, я обещала ей, что найду его.`,
+      status: 'open'
+    },
+    {
+      id: 2, type: 'wanted',
+      title: 'Меня ищет кто-то из детдома №4',
+      city: 'Казань', years: '2001–2005',
+      author: 'Игорь М.', date: '5 дней назад',
+      body: `Мне сказали, что здесь кто-то писал про детдом №4 в Казани. Я — Игорь. Помню девочку Лену, которая давала мне книги про космос.`,
+      status: 'open'
+    },
+    {
+      id: 3, type: 'found',
+      title: 'Нашёл школьную учительницу!',
+      city: 'Санкт-Петербург', years: '1988–1994',
+      author: 'Ольга В.', date: 'неделю назад',
+      body: `Писала сюда про Марию Ивановну из школы №117. Через 3 месяца откликнулась её дочь. Мы встретились в июне.`,
+      status: 'found'
+    }
+  ];
+
+  const feed = document.getElementById('feed');
+
+  function render() {
+    const q = document.getElementById('search').value.toLowerCase();
+    const f = document.getElementById('filter').value;
+
+    const filtered = posts.filter(p => {
+      const matchQ = !q ||
+        p.title.toLowerCase().includes(q) ||
+        p.city.toLowerCase().includes(q) ||
+        p.body.toLowerCase().includes(q);
+      const matchF = f === 'all' || p.type === f || (f === 'found' && p.status === 'found');
+      return matchQ && matchF;
+    });
+
+    feed.innerHTML = filtered.map(p => `
+      <article class="envelope ${p.status === 'found' ? 'found' : ''}" onclick="openPost(${p.id})">
+        <div class="stamp">${p.status === 'found' ? 'НАШЛИСЬ' : 'ПИСЬМО'}</div>
+        <h3>${p.title}</h3>
+        <div class="meta">${p.author} · ${p.city} · ${p.years} · ${p.date}</div>
+        <div class="excerpt">${p.body.slice(0, 160)}...</div>
+        <span class="tag ${p.status === 'found' ? 'seal' : ''}">
+          ${p.type === 'search' ? '🔍 Ищу' : p.type === 'wanted' ? '📬 Ищут меня' : '🤝 Нашлись'}
+        </span>
+      </article>
+    `).join('') || '<p style="color:#f5ecd9;text-align:center;grid-column:1/-1;">Писем не найдено.</p>';
+  }
+
+  function openPost(id) {
+    const p = posts.find(x => x.id === id);
+    document.getElementById('m-title').textContent = p.title;
+    document.getElementById('m-meta').textContent = `${p.author} · ${p.city} · ${p.years} · ${p.date}`;
+    document.getElementById('m-body').textContent = p.body;
+    document.getElementById('viewModal').classList.add('active');
+  }
+  function openForm() { document.getElementById('formModal').classList.add('active'); }
+  function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+  function addPost() {
+    const title = document.getElementById('f-title').value.trim();
+    const body = document.getElementById('f-body').value.trim();
+    if (!title || !body) return alert('Заполни заголовок и текст письма.');
+
+    posts.unshift({
+      id: Date.now(),
+      type: document.getElementById('f-type').value,
+      title,
+      city: document.getElementById('f-city').value || '—',
+      years: document.getElementById('f-years').value || '—',
+      author: 'Вы', date: 'только что',
+      body, status: 'open'
+    });
+
+    ['f-title','f-city','f-years','f-body'].forEach(id => document.getElementById(id).value = '');
+    closeModal('formModal');
+    render();
+  }
+
+  document.getElementById('search').addEventListener('input', render);
+  document.getElementById('filter').addEventListener('change', render);
+  document.querySelectorAll('.modal-bg').forEach(bg => {
+    bg.addEventListener('click', e => { if (e.target === bg) bg.classList.remove('active'); });
+  });
+
+  render();
+</script>
+</body>
+</html>
