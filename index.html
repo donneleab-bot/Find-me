@@ -3,218 +3,597 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Find Me — найди того, кто дорог</title>
+<title>Find Me — письма, которые ищут адресата</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Caveat:wght@500;700&family=Special+Elite&display=swap" rel="stylesheet">
+
 <style>
   :root {
-    --paper: #f5ecd9;
-    --paper-dark: #e8dcc0;
-    --ink: #2b2419;
-    --seal: #8b2e2e;
-    --accent: #6b7d5a;
+    --paper:        #f4ead3;
+    --paper-warm:   #ecdfc1;
+    --paper-shadow: #d9c9a1;
+    --ink:          #2a2118;
+    --ink-soft:     #4a3d2a;
+    --seal:         #8b2a2a;
+    --seal-dark:    #5e1a1a;
+    --accent:       #5e6f4a;
+    --gold:         #b08a3e;
+    --wood-dark:    #1e1a13;
+    --wood:         #2d2519;
   }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
+  html { scroll-behavior: smooth; }
+
   body {
-    font-family: 'Georgia', serif;
-    background: #3a3226;
-    background-image:
-      radial-gradient(circle at 20% 30%, rgba(255,255,255,0.04) 0%, transparent 40%),
-      radial-gradient(circle at 80% 70%, rgba(255,255,255,0.03) 0%, transparent 40%);
+    font-family: 'Cormorant Garamond', Georgia, serif;
     color: var(--ink);
     min-height: 100vh;
-    padding: 20px;
+    padding: 40px 20px 80px;
+    background: var(--wood-dark);
+    position: relative;
+    overflow-x: hidden;
   }
 
+  /* ── Фон: дерево + свет + виньетка + шум ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 0%, rgba(255, 220, 160, 0.15), transparent 55%),
+      radial-gradient(ellipse at 80% 100%, rgba(255, 200, 140, 0.08), transparent 55%),
+      repeating-linear-gradient(92deg, rgba(0,0,0,0.08) 0px, rgba(0,0,0,0.08) 2px, transparent 2px, transparent 7px),
+      linear-gradient(180deg, #2d2519 0%, #1e1a13 60%, #0f0c08 100%);
+    z-index: -2;
+  }
+  /* Шум */
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    pointer-events: none;
+    opacity: 0.35;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.6 0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>");
+    z-index: -1;
+  }
+
+  /* ── Виньетка ── */
+  .vignette {
+    position: fixed; inset: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.55) 100%);
+    z-index: 0;
+  }
+
+  header, .toolbar, .feed, footer { position: relative; z-index: 2; }
+
+  /* ── HEADER ── */
   header {
     max-width: 900px;
-    margin: 0 auto 30px;
+    margin: 0 auto 40px;
     text-align: center;
     color: var(--paper);
   }
-  header h1 {
-    font-size: 2.6rem;
-    letter-spacing: 4px;
-    margin-bottom: 8px;
-  }
-  header p { font-style: italic; opacity: 0.85; }
 
+  .logo-mark {
+    display: inline-block;
+    width: 68px; height: 68px;
+    margin-bottom: 14px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #a83535, var(--seal) 45%, var(--seal-dark) 100%);
+    box-shadow:
+      inset 0 -4px 8px rgba(0,0,0,0.5),
+      inset 0 4px 6px rgba(255,180,140,0.3),
+      0 10px 24px rgba(0,0,0,0.6),
+      0 0 0 2px rgba(255,220,180,0.1);
+    position: relative;
+    animation: sealPulse 4s ease-in-out infinite;
+  }
+  .logo-mark::after {
+    content: '✉';
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; color: #f4d9b0;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.7);
+  }
+  @keyframes sealPulse {
+    0%, 100% { box-shadow: inset 0 -4px 8px rgba(0,0,0,0.5), inset 0 4px 6px rgba(255,180,140,0.3), 0 10px 24px rgba(0,0,0,0.6), 0 0 0 2px rgba(255,220,180,0.1); }
+    50%      { box-shadow: inset 0 -4px 8px rgba(0,0,0,0.5), inset 0 4px 6px rgba(255,180,140,0.3), 0 10px 34px rgba(200,90,60,0.5), 0 0 0 4px rgba(255,220,180,0.2); }
+  }
+
+  header h1 {
+    font-family: 'Special Elite', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 400;
+    letter-spacing: 8px;
+    margin-bottom: 12px;
+    color: #f0e2c2;
+    text-shadow:
+      0 1px 0 #000,
+      0 2px 8px rgba(0,0,0,0.8),
+      0 0 30px rgba(200,140,80,0.3);
+  }
+  header p {
+    font-family: 'Caveat', cursive;
+    font-size: 1.3rem;
+    color: #cbb48a;
+    opacity: 0.9;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── TOOLBAR ── */
   .toolbar {
     max-width: 900px;
-    margin: 0 auto 25px;
+    margin: 0 auto 40px;
     display: flex;
-    gap: 10px;
+    gap: 12px;
     flex-wrap: wrap;
     justify-content: center;
+    padding: 16px;
+    background: rgba(20, 16, 10, 0.5);
+    border-radius: 14px;
+    border: 1px solid rgba(200, 160, 90, 0.15);
+    box-shadow: inset 0 1px 0 rgba(255,220,160,0.08), 0 8px 30px rgba(0,0,0,0.5);
+    backdrop-filter: blur(6px);
   }
-  .toolbar input,
-  .toolbar select,
-  .toolbar button {
-    padding: 10px 14px;
-    border: none;
-    border-radius: 4px;
-    font-family: inherit;
-    font-size: 0.95rem;
-  }
-  .toolbar input { flex: 1; min-width: 200px; }
-  .toolbar button {
-    background: var(--seal);
-    color: var(--paper);
-    cursor: pointer;
-    transition: 0.2s;
-  }
-  .toolbar button:hover { background: #6e2222; }
 
+  .toolbar input,
+  .toolbar select {
+    padding: 12px 16px;
+    border: 1px solid rgba(180, 140, 80, 0.3);
+    border-radius: 8px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    background: rgba(244, 234, 211, 0.06);
+    color: #efe2c4;
+    transition: 0.25s;
+  }
+  .toolbar input::placeholder { color: #9a8a6a; font-style: italic; }
+  .toolbar input:focus,
+  .toolbar select:focus {
+    outline: none;
+    background: rgba(244, 234, 211, 0.12);
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(176, 138, 62, 0.2);
+  }
+  .toolbar input { flex: 1; min-width: 220px; }
+  .toolbar select { cursor: pointer; }
+  .toolbar select option { background: #2d2519; color: #efe2c4; }
+
+  .btn-new {
+    padding: 12px 22px;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Special Elite', serif;
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+    color: #f4e2bc;
+    background: linear-gradient(180deg, #a83535, var(--seal) 50%, var(--seal-dark));
+    box-shadow:
+      inset 0 1px 0 rgba(255,200,180,0.4),
+      inset 0 -2px 4px rgba(0,0,0,0.4),
+      0 6px 16px rgba(0,0,0,0.5);
+    transition: 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-new:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      inset 0 1px 0 rgba(255,200,180,0.4),
+      inset 0 -2px 4px rgba(0,0,0,0.4),
+      0 10px 24px rgba(200, 60, 40, 0.5);
+  }
+  .btn-new:active { transform: translateY(0); }
+
+  /* ── FEED ── */
   .feed {
     max-width: 900px;
     margin: 0 auto;
     display: grid;
-    gap: 20px;
+    gap: 26px;
   }
 
+  /* ── КОНВЕРТ ── */
   .envelope {
     background: var(--paper);
-    border-radius: 6px;
-    padding: 22px 26px;
+    background-image:
+      radial-gradient(ellipse at 10% 10%, rgba(255,255,255,0.5), transparent 30%),
+      radial-gradient(ellipse at 90% 90%, rgba(180,150,100,0.2), transparent 40%),
+      repeating-linear-gradient(0deg, transparent 0px, transparent 27px, rgba(120,90,50,0.05) 27px, rgba(120,90,50,0.05) 28px);
+    border-radius: 4px;
+    padding: 32px 34px 28px;
     position: relative;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.35);
     cursor: pointer;
-    transition: transform 0.25s, box-shadow 0.25s;
-    border-left: 6px solid var(--accent);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.4) inset,
+      0 20px 40px -8px rgba(0,0,0,0.6),
+      0 8px 16px -4px rgba(0,0,0,0.4);
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s;
+    transform-origin: center;
   }
-  .envelope:hover {
-    transform: translateY(-3px) rotate(-0.3deg);
-    box-shadow: 0 12px 28px rgba(0,0,0,0.5);
-  }
-  .envelope.found {
-    border-left-color: var(--seal);
-    opacity: 0.8;
-    background: var(--paper-dark);
-  }
-  .envelope .stamp {
+
+  /* Загнутый уголок */
+  .envelope::after {
+    content: '';
     position: absolute;
-    top: 14px; right: 14px;
-    width: 56px; height: 66px;
-    background: repeating-linear-gradient(45deg, #d9cba8, #d9cba8 4px, #cbbb90 4px, #cbbb90 8px);
-    border: 2px dashed #8a7a52;
+    right: 0; bottom: 0;
+    width: 34px; height: 34px;
+    background: linear-gradient(135deg, transparent 50%, var(--paper-shadow) 50%);
+    filter: drop-shadow(-2px -2px 3px rgba(0,0,0,0.15));
+    border-top-left-radius: 4px;
+  }
+
+  /* Клапан конверта сверху */
+  .envelope::before {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; top: 0;
+    height: 6px;
+    background: linear-gradient(90deg, var(--accent), #7d8e63 50%, var(--accent));
+    border-radius: 4px 4px 0 0;
+    opacity: 0.85;
+  }
+
+  .envelope:hover {
+    transform: translateY(-6px) rotate(-0.4deg);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.4) inset,
+      0 30px 60px -10px rgba(0,0,0,0.75),
+      0 12px 24px -6px rgba(0,0,0,0.5),
+      0 0 40px rgba(200, 150, 90, 0.15);
+  }
+
+  .envelope.found {
+    background: var(--paper-warm);
+    filter: sepia(0.15);
+  }
+  .envelope.found::before {
+    background: linear-gradient(90deg, var(--seal), #a83535 50%, var(--seal));
+  }
+
+  /* ── МАРКА ── */
+  .stamp {
+    position: absolute;
+    top: 18px; right: 20px;
+    width: 62px; height: 74px;
+    background:
+      repeating-linear-gradient(45deg, #cdb98e, #cdb98e 5px, #b9a271 5px, #b9a271 10px);
+    border: 2px dashed #7a6538;
     display: flex; align-items: center; justify-content: center;
-    font-size: 0.7rem; text-align: center;
-    color: #5a4a2a;
-    transform: rotate(6deg);
+    font-family: 'Special Elite', serif;
+    font-size: 0.62rem;
+    letter-spacing: 1px;
+    color: #4a3a1a;
+    text-align: center;
+    padding: 4px;
+    transform: rotate(7deg);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.25);
+    z-index: 2;
   }
+  .stamp::after {
+    content: '';
+    position: absolute; inset: 4px;
+    border: 1px solid rgba(120,90,50,0.4);
+  }
+
+  /* ── ПЕЧАТЬ «НАШЛИСЬ» ── */
+  .found-seal {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) rotate(-12deg);
+    font-family: 'Special Elite', serif;
+    font-size: 1.6rem;
+    letter-spacing: 6px;
+    color: rgba(139, 42, 42, 0.35);
+    border: 3px double rgba(139, 42, 42, 0.4);
+    padding: 10px 24px;
+    border-radius: 6px;
+    pointer-events: none;
+    text-transform: uppercase;
+    z-index: 3;
+  }
+
+  /* ── ТЕКСТ КАРТОЧКИ ── */
   .envelope h3 {
-    font-size: 1.15rem;
-    margin-bottom: 6px;
-    padding-right: 70px;
-  }
-  .envelope .meta {
-    font-size: 0.8rem;
-    color: #6b5c40;
-    font-style: italic;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 1.45rem;
+    line-height: 1.25;
     margin-bottom: 10px;
+    padding-right: 80px;
+    color: var(--ink);
+    letter-spacing: 0.3px;
   }
+
+  .envelope .meta {
+    font-family: 'Special Elite', serif;
+    font-size: 0.72rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    opacity: 0.75;
+    margin-bottom: 14px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    align-items: center;
+  }
+  .envelope .meta span { white-space: nowrap; }
+  .envelope .meta .dot { opacity: 0.4; }
+
   .envelope .excerpt {
-    font-size: 0.95rem;
-    line-height: 1.5;
+    font-size: 1.02rem;
+    line-height: 1.6;
     color: #3a3122;
+    font-style: italic;
+    font-family: 'Caveat', cursive;
+    font-size: 1.25rem;
+    line-height: 1.35;
+    opacity: 0.95;
   }
-  .envelope .tag {
-    display: inline-block;
-    margin-top: 12px;
-    padding: 3px 10px;
-    font-size: 0.75rem;
+
+  /* ── ТЕГ ── */
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 18px;
+    padding: 5px 14px 5px 12px;
+    font-family: 'Special Elite', serif;
+    font-size: 0.7rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
     background: var(--accent);
     color: var(--paper);
-    border-radius: 12px;
+    border-radius: 20px;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.2),
+      0 3px 8px rgba(0,0,0,0.25);
   }
-  .envelope .tag.seal { background: var(--seal); }
+  .tag.seal {
+    background: var(--seal);
+  }
+  .tag::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.8);
+    box-shadow: 0 0 6px rgba(255,255,255,0.6);
+  }
 
+  /* ── ФУТЕР ── */
+  footer {
+    max-width: 900px;
+    margin: 60px auto 0;
+    text-align: center;
+    color: #9a8a6a;
+    font-family: 'Caveat', cursive;
+    font-size: 1.15rem;
+    opacity: 0.7;
+    position: relative;
+  }
+  footer::before {
+    content: '❦';
+    display: block;
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+    opacity: 0.5;
+    color: var(--gold);
+  }
+
+  /* ── МОДАЛКИ ── */
   .modal-bg {
     position: fixed; inset: 0;
-    background: rgba(0,0,0,0.75);
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(8px);
     display: none;
     align-items: center;
     justify-content: center;
     padding: 20px;
     z-index: 100;
+    animation: fadeIn 0.3s;
   }
   .modal-bg.active { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
   .modal {
     background: var(--paper);
-    max-width: 600px;
+    background-image:
+      radial-gradient(ellipse at 20% 0%, rgba(255,255,255,0.6), transparent 40%),
+      repeating-linear-gradient(0deg, transparent 0px, transparent 29px, rgba(120,90,50,0.06) 29px, rgba(120,90,50,0.06) 30px);
+    max-width: 620px;
     width: 100%;
-    max-height: 85vh;
+    max-height: 88vh;
     overflow-y: auto;
-    padding: 36px;
-    border-radius: 6px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+    padding: 46px 44px 40px;
+    border-radius: 4px;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.5) inset,
+      0 30px 80px rgba(0,0,0,0.9),
+      0 0 0 1px rgba(120,90,50,0.3);
     position: relative;
+    animation: modalIn 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.2);
   }
-  .modal h2 { margin-bottom: 12px; }
-  .modal .meta { font-style: italic; color: #6b5c40; margin-bottom: 18px; font-size: 0.9rem; }
-  .modal .body { line-height: 1.7; margin-bottom: 22px; white-space: pre-wrap; }
-  .modal .close {
-    position: absolute; top: 14px; right: 18px;
-    background: none; border: none;
-    font-size: 1.6rem; cursor: pointer; color: #6b5c40;
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.92) rotate(-1deg); }
+    to   { opacity: 1; transform: scale(1) rotate(0deg); }
   }
-  .modal .actions { display: flex; gap: 10px; flex-wrap: wrap; }
-  .modal .actions button {
-    padding: 10px 18px;
-    border: none; border-radius: 4px;
-    font-family: inherit; cursor: pointer; font-size: 0.9rem;
-  }
-  .btn-contact { background: var(--seal); color: var(--paper); }
-  .btn-found { background: var(--accent); color: var(--paper); }
 
+  .modal::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 8px;
+    background: linear-gradient(90deg, var(--seal), #a83535 50%, var(--seal));
+  }
+
+  .modal .close {
+    position: absolute;
+    top: 18px; right: 20px;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: rgba(139, 42, 42, 0.1);
+    border: 1px solid rgba(139, 42, 42, 0.3);
+    font-size: 1.3rem;
+    cursor: pointer;
+    color: var(--seal);
+    transition: 0.25s;
+    display: flex; align-items: center; justify-content: center;
+    line-height: 1;
+  }
+  .modal .close:hover {
+    background: var(--seal);
+    color: var(--paper);
+    transform: rotate(90deg);
+  }
+
+  .modal h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 1.9rem;
+    line-height: 1.2;
+    margin-bottom: 14px;
+    color: var(--ink);
+    letter-spacing: 0.3px;
+  }
+
+  .modal .meta {
+    font-family: 'Special Elite', serif;
+    font-size: 0.72rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    opacity: 0.75;
+    margin-bottom: 22px;
+  }
+
+  .modal .body {
+    font-family: 'Caveat', cursive;
+    font-size: 1.35rem;
+    line-height: 1.45;
+    color: #2a2118;
+    margin-bottom: 28px;
+    white-space: pre-wrap;
+  }
+
+  .modal .actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding-top: 20px;
+    border-top: 1px dashed rgba(120, 90, 50, 0.35);
+  }
+
+  .modal .actions button {
+    flex: 1;
+    min-width: 160px;
+    padding: 13px 20px;
+    border: none;
+    border-radius: 6px;
+    font-family: 'Special Elite', serif;
+    font-size: 0.82rem;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: 0.25s;
+    color: #f4e2bc;
+  }
+  .btn-contact {
+    background: linear-gradient(180deg, #a83535, var(--seal-dark));
+    box-shadow: inset 0 1px 0 rgba(255,200,180,0.3), 0 6px 16px rgba(0,0,0,0.35);
+  }
+  .btn-contact:hover { transform: translateY(-2px); box-shadow: inset 0 1px 0 rgba(255,200,180,0.3), 0 10px 22px rgba(200,60,40,0.5); }
+  .btn-found {
+    background: linear-gradient(180deg, #6d7f57, #4a5738);
+    box-shadow: inset 0 1px 0 rgba(220,255,200,0.25), 0 6px 16px rgba(0,0,0,0.35);
+  }
+  .btn-found:hover { transform: translateY(-2px); box-shadow: inset 0 1px 0 rgba(220,255,200,0.25), 0 10px 22px rgba(90,120,60,0.5); }
+
+  /* ── ФОРМА ── */
+  .form-modal label {
+    display: block;
+    font-family: 'Special Elite', serif;
+    font-size: 0.7rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+    opacity: 0.85;
+  }
   .form-modal input,
   .form-modal textarea,
   .form-modal select {
     width: 100%;
-    padding: 10px;
-    margin-bottom: 12px;
-    border: 1px solid #c9b98d;
-    border-radius: 4px;
-    font-family: inherit;
-    background: #fdf9ee;
-    font-size: 0.95rem;
+    padding: 11px 14px;
+    margin-bottom: 16px;
+    border: none;
+    border-bottom: 1.5px solid rgba(120, 90, 50, 0.35);
+    background: transparent;
+    font-family: 'Caveat', cursive;
+    font-size: 1.2rem;
+    color: var(--ink);
+    transition: 0.25s;
+    border-radius: 0;
   }
-  .form-modal textarea { min-height: 120px; resize: vertical; }
-  .form-modal label { font-size: 0.85rem; color: #5a4a2a; display: block; margin-bottom: 4px; }
+  .form-modal input:focus,
+  .form-modal textarea:focus,
+  .form-modal select:focus {
+    outline: none;
+    border-bottom-color: var(--seal);
+    background: rgba(139, 42, 42, 0.04);
+  }
+  .form-modal textarea {
+    min-height: 130px;
+    resize: vertical;
+    line-height: 1.4;
+  }
+  .form-modal select { cursor: pointer; }
 
-  footer {
-    max-width: 900px;
-    margin: 40px auto 0;
-    text-align: center;
-    color: var(--paper);
-    opacity: 0.6;
-    font-size: 0.85rem;
-    font-style: italic;
+  /* ── АДАПТИВ ── */
+  @media (max-width: 600px) {
+    body { padding: 24px 14px 60px; }
+    header h1 { letter-spacing: 4px; }
+    .envelope { padding: 24px 22px 22px; }
+    .envelope h3 { font-size: 1.2rem; padding-right: 62px; }
+    .stamp { width: 48px; height: 56px; font-size: 0.55rem; top: 14px; right: 14px; }
+    .modal { padding: 34px 24px 28px; }
+    .modal h2 { font-size: 1.5rem; }
+    .modal .body { font-size: 1.2rem; }
+    .found-seal { font-size: 1.1rem; letter-spacing: 4px; padding: 8px 16px; }
   }
 </style>
 </head>
 <body>
 
+<div class="vignette"></div>
+
 <header>
-  <h1>✉ Find Me</h1>
-  <p>Напиши письмо тому, кого потерял. Возможно, оно уже ждёт ответа.</p>
+  <div class="logo-mark"></div>
+  <h1>FIND&nbsp;ME</h1>
+  <p>Письма, которые ищут своего адресата</p>
 </header>
 
 <div class="toolbar">
-  <input id="search" placeholder="Поиск по имени, городу, приметам...">
+  <input id="search" placeholder="Поиск по имени, городу, приметам…">
   <select id="filter">
     <option value="all">Все письма</option>
-    <option value="search">Ищу человека</option>
+    <option value="search">Я ищу</option>
     <option value="wanted">Ищут меня</option>
     <option value="found">Уже нашлись</option>
   </select>
-  <button onclick="openForm()">✍ Написать письмо</button>
+  <button class="btn-new" onclick="openForm()">✍ Написать письмо</button>
 </div>
 
 <main class="feed" id="feed"></main>
 
-<footer>Find Me — тёплое место, где встречи случаются снова.</footer>
+<footer>Find Me — тёплое место, где встречи случаются снова</footer>
 
+<!-- Просмотр письма -->
 <div class="modal-bg" id="viewModal">
   <div class="modal">
     <button class="close" onclick="closeModal('viewModal')">✕</button>
@@ -222,30 +601,31 @@
     <div class="meta" id="m-meta"></div>
     <div class="body" id="m-body"></div>
     <div class="actions">
-      <button class="btn-contact" onclick="alert('Здесь будет форма связи.')">✉ Я знаю этого человека</button>
-      <button class="btn-found" onclick="alert('Отмечено как «нашлись».')">🤝 Мы нашлись</button>
+      <button class="btn-contact" onclick="alert('Здесь будет форма связи с автором.')">✉ Я знаю этого человека</button>
+      <button class="btn-found" onclick="alert('Отмечено как «нашлись». Спасибо!')">🤝 Мы нашлись</button>
     </div>
   </div>
 </div>
 
+<!-- Новое письмо -->
 <div class="modal-bg" id="formModal">
   <div class="modal form-modal">
     <button class="close" onclick="closeModal('formModal')">✕</button>
     <h2>Новое письмо</h2>
-    <label>Тип</label>
+    <label>Тип письма</label>
     <select id="f-type">
       <option value="search">Я ищу человека</option>
       <option value="wanted">Меня ищут (отклик)</option>
     </select>
-    <label>Заголовок</label>
+    <label>Кого ищу / заголовок</label>
     <input id="f-title" placeholder="Ищу одноклассницу Марину из Твери">
     <label>Город / место</label>
     <input id="f-city" placeholder="Где это было">
     <label>Годы / период</label>
     <input id="f-years" placeholder="1998–2003">
-    <label>Что ты знаешь (только факты)</label>
-    <textarea id="f-body" placeholder="Пиши только то, что помнишь точно..."></textarea>
-    <button class="btn-contact" style="width:100%" onclick="addPost()">📮 Отправить письмо</button>
+    <label>Что я знаю (только факты)</label>
+    <textarea id="f-body" placeholder="Пиши только то, что помнишь точно…"></textarea>
+    <button class="btn-contact" style="width:100%" onclick="addPost()">📮 Запечатать и отправить</button>
   </div>
 </div>
 
@@ -256,7 +636,7 @@
       title: 'Ищу брата, потерянного в 90-х',
       city: 'Красноярск', years: '1996–1999',
       author: 'Анна К.', date: '2 дня назад',
-      body: `Ищу старшего брата Дмитрия. В 1997 году его усыновила семья из Красноярска, когда нам было 6 и 9 лет. Помню: у него была родинка под левым глазом, он собирал модели самолётов.\n\nНаша мама умерла в 2003, я обещала ей, что найду его.`,
+      body: `Ищу старшего брата Дмитрия. В 1997 году его усыновила семья из Красноярска, когда нам было 6 и 9 лет.\n\nПомню: у него была родинка под левым глазом, он собирал модели самолётов и всегда пел «Траву у дома».\n\nМама умерла в 2003. Я обещала ей, что найду его.`,
       status: 'open'
     },
     {
@@ -264,7 +644,7 @@
       title: 'Меня ищет кто-то из детдома №4',
       city: 'Казань', years: '2001–2005',
       author: 'Игорь М.', date: '5 дней назад',
-      body: `Мне сказали, что здесь кто-то писал про детдом №4 в Казани. Я — Игорь. Помню девочку Лену, которая давала мне книги про космос.`,
+      body: `Мне сказали, что здесь кто-то писал про детдом №4 в Казани.\n\nЯ — Игорь. Был там с 2001 по 2005. Помню девочку Лену, которая давала мне книги про космос. Если ты читаешь это — напиши.`,
       status: 'open'
     },
     {
@@ -272,7 +652,7 @@
       title: 'Нашёл школьную учительницу!',
       city: 'Санкт-Петербург', years: '1988–1994',
       author: 'Ольга В.', date: 'неделю назад',
-      body: `Писала сюда про Марию Ивановну из школы №117. Через 3 месяца откликнулась её дочь. Мы встретились в июне.`,
+      body: `Писала сюда про Марию Ивановну из школы №117. Через три месяца откликнулась её дочь. Мы встретились в июне.\n\nСпасибо всем, кто откликался и делился.`,
       status: 'found'
     }
   ];
@@ -280,7 +660,7 @@
   const feed = document.getElementById('feed');
 
   function render() {
-    const q = document.getElementById('search').value.toLowerCase();
+    const q = document.getElementById('search').value.toLowerCase().trim();
     const f = document.getElementById('filter').value;
 
     const filtered = posts.filter(p => {
@@ -292,17 +672,33 @@
       return matchQ && matchF;
     });
 
-    feed.innerHTML = filtered.map(p => `
-      <article class="envelope ${p.status === 'found' ? 'found' : ''}" onclick="openPost(${p.id})">
-        <div class="stamp">${p.status === 'found' ? 'НАШЛИСЬ' : 'ПИСЬМО'}</div>
-        <h3>${p.title}</h3>
-        <div class="meta">${p.author} · ${p.city} · ${p.years} · ${p.date}</div>
-        <div class="excerpt">${p.body.slice(0, 160)}...</div>
-        <span class="tag ${p.status === 'found' ? 'seal' : ''}">
-          ${p.type === 'search' ? '🔍 Ищу' : p.type === 'wanted' ? '📬 Ищут меня' : '🤝 Нашлись'}
-        </span>
-      </article>
-    `).join('') || '<p style="color:#f5ecd9;text-align:center;grid-column:1/-1;">Писем не найдено.</p>';
+    feed.innerHTML = filtered.map(p => {
+      const isFound = p.status === 'found';
+      const tagClass = isFound ? 'seal' : '';
+      const tagText = p.type === 'search' ? 'Ищу'
+                     : p.type === 'wanted' ? 'Ищут меня'
+                     : 'Нашлись';
+      const excerpt = p.body.replace(/\n+/g, ' ').slice(0, 155);
+
+      return `
+        <article class="envelope ${isFound ? 'found' : ''}" onclick="openPost(${p.id})">
+          <div class="stamp">${isFound ? 'НАШЛИСЬ' : 'ПИСЬМО'}</div>
+          ${isFound ? '<div class="found-seal">Нашлись</div>' : ''}
+          <h3>${p.title}</h3>
+          <div class="meta">
+            <span>${p.author}</span>
+            <span class="dot">·</span>
+            <span>${p.city}</span>
+            <span class="dot">·</span>
+            <span>${p.years}</span>
+            <span class="dot">·</span>
+            <span>${p.date}</span>
+          </div>
+          <div class="excerpt">«${excerpt}…»</div>
+          <span class="tag ${tagClass}">${tagText}</span>
+        </article>
+      `;
+    }).join('') || '<p style="color:#cbb48a;text-align:center;grid-column:1/-1;font-family:\'Caveat\',cursive;font-size:1.4rem;opacity:0.7;">Писем пока нет…</p>';
   }
 
   function openPost(id) {
@@ -318,7 +714,7 @@
   function addPost() {
     const title = document.getElementById('f-title').value.trim();
     const body = document.getElementById('f-body').value.trim();
-    if (!title || !body) return alert('Заполни заголовок и текст письма.');
+    if (!title || !body) return alert('Заполни хотя бы заголовок и текст письма.');
 
     posts.unshift({
       id: Date.now(),
@@ -339,6 +735,9 @@
   document.getElementById('filter').addEventListener('change', render);
   document.querySelectorAll('.modal-bg').forEach(bg => {
     bg.addEventListener('click', e => { if (e.target === bg) bg.classList.remove('active'); });
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') document.querySelectorAll('.modal-bg.active').forEach(m => m.classList.remove('active'));
   });
 
   render();
