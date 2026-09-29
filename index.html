@@ -90,19 +90,32 @@
 
   .dove-mark {
     display: inline-block;
-    width: 120px;
-    height: 120px;
-    margin-bottom: 8px;
-    filter: drop-shadow(0 12px 24px rgba(0,0,0,0.7)) drop-shadow(0 0 40px rgba(220, 200, 150, 0.25));
+    width: 160px;
+    height: 115px;
+    margin-bottom: 6px;
+    filter:
+      drop-shadow(0 12px 24px rgba(0,0,0,0.6))
+      drop-shadow(0 0 50px rgba(220, 200, 150, 0.25));
     position: relative;
-    animation: doveFloat 6s ease-in-out infinite;
-  }
-  .dove-mark svg { width: 100%; height: 100%; display: block; }
-  @keyframes doveFloat {
-    0%, 100% { transform: translateY(0) rotate(-2deg); }
-    50%      { transform: translateY(-8px) rotate(2deg); }
+    animation: doveFly 5s ease-in-out infinite;
   }
 
+  .dove-mark svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    overflow: visible;
+  }
+
+  @keyframes doveFly {
+    0%, 100% {
+      transform: translateY(0) rotate(-2deg);
+    }
+    50% {
+      transform: translateY(-10px) rotate(2deg);
+    }
+  }
+  
   header h1 {
     font-family: 'Special Elite', serif;
     font-size: clamp(2rem, 5.5vw, 3.2rem);
@@ -1230,151 +1243,123 @@
 <!-- ═══════════ ГОЛУБЬ + ШАПКА ═══════════ -->
 <header>
 <div class="dove-mark" aria-label="Голубь Find Me">
-  <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <svg viewBox="0 0 140 100" xmlns="http://www.w3.org/2000/svg">
     <defs>
-      <!-- Тело: белое с сероватым низом -->
-      <linearGradient id="doveBody" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#ffffff"/>
-        <stop offset="55%" stop-color="#f0e9d8"/>
-        <stop offset="100%" stop-color="#d4c8a8"/>
-      </linearGradient>
-
-      <!-- Крыло -->
-      <linearGradient id="doveWing" x1="0" y1="0" x2="0.5" y2="1">
-        <stop offset="0%" stop-color="#ffffff"/>
-        <stop offset="100%" stop-color="#d8cdb0"/>
-      </linearGradient>
-
-      <!-- Тень крыла -->
-      <linearGradient id="wingShade" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#b8ab88" stop-opacity="0.5"/>
-        <stop offset="100%" stop-color="#b8ab88" stop-opacity="0"/>
-      </linearGradient>
-
-      <!-- Клюв -->
-      <linearGradient id="beak" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stop-color="#c98a4a"/>
-        <stop offset="100%" stop-color="#8a5a28"/>
-      </linearGradient>
-
-      <!-- Лапка -->
-      <linearGradient id="leg" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#c98a4a"/>
-        <stop offset="100%" stop-color="#8a5a28"/>
-      </linearGradient>
-
-      <!-- Конверт -->
-      <linearGradient id="env" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#fdf5df"/>
-        <stop offset="100%" stop-color="#e0cfa0"/>
-      </linearGradient>
-
-      <!-- Мягкая тень под голубем -->
-      <radialGradient id="shadow" cx="0.5" cy="0.5" r="0.5">
-        <stop offset="0%" stop-color="#000" stop-opacity="0.4"/>
-        <stop offset="100%" stop-color="#000" stop-opacity="0"/>
+      <!-- Мягкое свечение вокруг -->
+      <radialGradient id="doveGlow" cx="0.5" cy="0.5" r="0.5">
+        <stop offset="0%"  stop-color="#f4d9b0" stop-opacity="0.22"/>
+        <stop offset="60%" stop-color="#f4d9b0" stop-opacity="0.06"/>
+        <stop offset="100%" stop-color="#f4d9b0" stop-opacity="0"/>
       </radialGradient>
-
-      <filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%">
-        <feGaussianBlur stdDeviation="1.5"/>
-      </filter>
     </defs>
 
-    <!-- Ореол -->
-    <circle cx="60" cy="60" r="56" fill="rgba(255, 235, 190, 0.05)"/>
-    <circle cx="60" cy="60" r="56" stroke="rgba(255, 220, 170, 0.22)" stroke-width="0.7" stroke-dasharray="2 3" fill="none"/>
+    <!-- Свечение под голубем -->
+    <ellipse cx="70" cy="50" rx="66" ry="42" fill="url(#doveGlow)"/>
 
-    <!-- Тень под голубем -->
-    <ellipse cx="62" cy="98" rx="34" ry="5" fill="url(#shadow)"/>
+    <!-- ═══════════════════════════════════════
+         ГОЛУБЬ В ПОЛЁТЕ
+         Один контур. Один цвет. Ничего лишнего.
+         ═══════════════════════════════════════ -->
+    <path d="
+      M 22 46
+      L 8  40
+      L 14 50
+      L 2  48
+      L 16 54
+      L 22 56
+      Z
+    " fill="#f0e2c2"/>
 
-    <!-- ══ ХВОСТ ══ (веером, направлен вниз-вправо) -->
-    <path d="M88 72
-             L 106 78 L 108 72
-             L 112 74 L 110 66
-             L 116 62 L 110 58
-             L 112 50 L 104 54
-             L 100 46 L 96 56
-             Z"
-          fill="url(#doveWing)" stroke="rgba(140,120,90,0.5)" stroke-width="0.6" stroke-linejoin="round"/>
+    <!-- Тело + голова + хвост — единый силуэт -->
+    <path d="
+      M 78 46
+      C 92 46, 104 50, 112 58
+      L 132 76
+      L 128 60
+      L 138 56
+      L 118 44
+      C 104 34, 90 32, 78 36
+      C 66 30, 54 30, 46 36
+      C 38 42, 36 50, 42 56
+      C 48 62, 60 66, 74 64
+      C 84 62, 92 56, 96 50
+      C 100 44, 92 46, 78 46
+      Z
+    " fill="#f0e2c2" opacity="0"/>
 
-    <!-- ══ ЗАДНЯЯ ЛАПКА ══ -->
-    <path d="M64 84 L64 94 M64 94 L58 98 M64 94 L64 99 M64 94 L70 98"
-          stroke="url(#leg)" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+    <!-- Верхнее крыло (взмах вверх) -->
+    <path d="
+      M 62 42
+      C 54 26, 40 16, 24 18
+      C 34 24, 40 34, 44 44
+      C 50 40, 56 40, 62 42
+      Z
+    " fill="#f0e2c2"/>
 
-    <!-- ══ ТЕЛО ══ (капля, наклонена влево) -->
-    <path d="M30 66
-             C 26 54, 34 42, 48 38
-             C 60 35, 72 40, 78 48
-             C 84 56, 86 66, 84 74
-             C 82 82, 74 88, 64 90
-             C 50 92, 38 86, 32 78
-             C 29 74, 29 70, 30 66 Z"
-          fill="url(#doveBody)" stroke="rgba(150,130,95,0.55)" stroke-width="0.7"/>
+    <!-- Тело -->
+    <path d="
+      M 40 52
+      C 38 42, 50 34, 68 34
+      C 86 34, 98 40, 108 50
+      C 116 58, 118 66, 114 72
+      C 108 78, 94 80, 78 78
+      C 62 76, 48 68, 42 60
+      C 39 57, 39 54, 40 52
+      Z
+    " fill="#f0e2c2"/>
 
-    <!-- ══ ПЕРЕДНЯЯ ЛАПКА (с веточкой) ══ -->
-    <path d="M50 88 L50 98 M50 98 L44 102 M50 98 L50 103 M50 98 L56 102"
-          stroke="url(#leg)" stroke-width="1.6" stroke-linecap="round" fill="none"/>
-    <!-- Веточка оливы -->
-    <path d="M42 100 Q 36 102, 30 100" stroke="#5e6f4a" stroke-width="0.9" fill="none" stroke-linecap="round"/>
-    <ellipse cx="38" cy="101" rx="3" ry="1.4" fill="#6d7f57" transform="rotate(-25 38 101)"/>
-    <ellipse cx="33" cy="101.5" rx="3" ry="1.4" fill="#6d7f57" transform="rotate(-25 33 101.5)"/>
-    <ellipse cx="28" cy="101" rx="3" ry="1.4" fill="#6d7f57" transform="rotate(-25 28 101)"/>
+    <!-- Нижнее крыло (под телом) -->
+    <path d="
+      M 70 66
+      C 64 74, 56 80, 44 82
+      C 52 82, 60 80, 68 76
+      C 76 72, 82 68, 84 62
+      C 80 64, 74 66, 70 66
+      Z
+    " fill="#f0e2c2" opacity="0.85"/>
 
-    <!-- ══ КРЫЛО ══ (большое, лежит на теле) -->
-    <path d="M44 50
-             C 50 42, 66 40, 76 48
-             C 82 53, 84 62, 82 70
-             C 78 66, 72 62, 66 62
-             C 58 62, 50 66, 46 70
-             C 42 66, 40 58, 44 50 Z"
-          fill="url(#doveWing)" stroke="rgba(140,120,90,0.6)" stroke-width="0.6" stroke-linejoin="round"/>
+    <!-- Хвост (веер снизу-справа) -->
+    <path d="
+      M 106 62
+      L 128 82
+      L 126 72
+      L 136 70
+      L 128 62
+      L 136 52
+      L 122 56
+      L 118 46
+      L 112 58
+      Z
+    " fill="#f0e2c2"/>
 
-    <!-- Перья на крыле (тонкие линии) -->
-    <path d="M50 52 Q 60 50, 72 54
-             M48 58 Q 60 56, 76 60
-             M48 64 Q 60 62, 78 66"
-          stroke="rgba(150,130,95,0.5)" stroke-width="0.55" fill="none" stroke-linecap="round"/>
+    <!-- Голова -->
+    <circle cx="34" cy="46" r="11" fill="#f0e2c2"/>
 
-    <!-- Тень под крылом -->
-    <path d="M46 68 C 55 64, 68 64, 80 68"
-          stroke="url(#wingShade)" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <!-- Клюв -->
+    <path d="
+      M 24 44
+      L 14 46
+      L 24 49
+      Z
+    " fill="#f0e2c2"/>
 
-    <!-- ══ ШЕЯ (переход к голове) ══ -->
-    <path d="M30 66 C 26 58, 24 50, 26 42"
-          stroke="rgba(150,130,95,0.55)" stroke-width="0.7" fill="none"/>
-
-    <!-- ══ ГОЛОВА ══ -->
-    <ellipse cx="30" cy="42" rx="12" ry="11" fill="url(#doveBody)" stroke="rgba(150,130,95,0.55)" stroke-width="0.7" transform="rotate(-20 30 42)"/>
-
-    <!-- ══ КЛЮВ ══ -->
-    <path d="M19 41 L 12 43 L 19 45 Z"
-          fill="url(#beak)" stroke="rgba(100,60,20,0.6)" stroke-width="0.5" stroke-linejoin="round"/>
-    <!-- Полоска на клюве -->
-    <path d="M19 43 L 13 43" stroke="rgba(60,30,10,0.6)" stroke-width="0.4"/>
-
-    <!-- Восковица -->
-    <ellipse cx="21" cy="42" rx="1.6" ry="2" fill="#f0dcc0" opacity="0.9" transform="rotate(-20 21 42)"/>
-
-    <!-- ══ ГЛАЗ ══ -->
-    <circle cx="28" cy="40" r="1.6" fill="#1a1610"/>
-    <circle cx="27.4" cy="39.4" r="0.6" fill="#ffffff"/>
-    <circle cx="28.5" cy="40.5" r="0.3" fill="#ffffff" opacity="0.6"/>
-
-    <!-- Лёгкий румянец -->
-    <ellipse cx="31" cy="45" rx="3" ry="1.6" fill="#e8a898" opacity="0.18"/>
-
-    <!-- ══ ПИСЬМО В КЛЮВЕ ══ -->
-    <g transform="translate(2, 40) rotate(-8)">
-      <rect x="0" y="0" width="18" height="12" rx="1" fill="url(#env)" stroke="rgba(120,90,50,0.85)" stroke-width="0.6"/>
+    <!-- ═══════════════════════════════════════
+         ПИСЬМО В КЛЮВЕ
+         ═══════════════════════════════════════ -->
+    <g transform="translate(4, 42)">
+      <!-- Конверт -->
+      <rect x="0" y="0" width="16" height="11" rx="0.8"
+            fill="#2d2519" stroke="#f0e2c2" stroke-width="1"/>
       <!-- Клапан -->
-      <path d="M0 1 L 9 7 L 18 1" stroke="rgba(120,90,50,0.85)" stroke-width="0.6" fill="none"/>
+      <path d="M0 1 L 8 6.5 L 16 1" fill="none" stroke="#f0e2c2" stroke-width="0.8"/>
       <!-- Сургучная печать -->
-      <circle cx="9" cy="7.5" r="2.2" fill="#8b2a2a" stroke="#5e1a1a" stroke-width="0.5"/>
-      <circle cx="9" cy="7.5" r="1.1" fill="none" stroke="#f4d9b0" stroke-width="0.35" opacity="0.7"/>
-      <!-- Штрихи адреса -->
-      <path d="M3 3 L 6 3 M 3 5 L 5 5" stroke="rgba(120,90,50,0.5)" stroke-width="0.4" stroke-linecap="round"/>
+      <circle cx="8" cy="7" r="2" fill="#8b2a2a" stroke="#f0e2c2" stroke-width="0.6"/>
     </g>
 
+    <!-- ═══════════════════════════════════════
+         АНИМАЦИЯ ВЗМАХА (пульсирующая прозрачность
+         верхнего крыла через keyframes в CSS)
+         ═══════════════════════════════════════ -->
   </svg>
 </div>
 
