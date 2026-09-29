@@ -45,7 +45,6 @@
     overflow-x: hidden;
   }
 
-  /* ═══════════ ФОН ═══════════ */
   body::before {
     content: '';
     position: fixed; inset: 0;
@@ -76,9 +75,6 @@
   }
   header, .toolbar, .tabs, .feed, footer, .hero { position: relative; z-index: 2; }
 
-  /* ══════════════════════════════════════════════
-     HEADER с голубем
-     ══════════════════════════════════════════════ */
   header {
     max-width: 1100px;
     margin: 0 auto;
@@ -90,8 +86,8 @@
 
   .dove-mark {
     display: inline-block;
-    width: 160px;
-    height: 115px;
+    width: 170px;
+    height: 130px;
     margin-bottom: 6px;
     filter:
       drop-shadow(0 12px 24px rgba(0,0,0,0.6))
@@ -99,23 +95,17 @@
     position: relative;
     animation: doveFly 5s ease-in-out infinite;
   }
-
   .dove-mark svg {
     width: 100%;
     height: 100%;
     display: block;
     overflow: visible;
   }
-
   @keyframes doveFly {
-    0%, 100% {
-      transform: translateY(0) rotate(-2deg);
-    }
-    50% {
-      transform: translateY(-10px) rotate(2deg);
-    }
+    0%, 100% { transform: translateY(0) rotate(-2deg); }
+    50%      { transform: translateY(-10px) rotate(2deg); }
   }
-  
+
   header h1 {
     font-family: 'Special Elite', serif;
     font-size: clamp(2rem, 5.5vw, 3.2rem);
@@ -169,7 +159,6 @@
     color: var(--gold-light);
   }
 
-  /* ═══════════ ЦИТАТА ═══════════ */
   .hero {
     max-width: 1100px;
     margin: 26px auto 0;
@@ -187,7 +176,6 @@
     position: relative;
   }
 
-  /* ═══════════ TOOLBAR ═══════════ */
   .toolbar {
     max-width: 1100px;
     margin: 30px auto 0;
@@ -266,7 +254,6 @@
   }
   .btn-new:hover::after { left: 100%; }
 
-  /* ═══════════ TABS ═══════════ */
   .tabs {
     max-width: 1100px;
     margin: 42px auto 0;
@@ -379,7 +366,6 @@
     background: radial-gradient(circle at 35% 30%, #d4b06a, #8b6a2a);
   }
 
-  /* ═══════════ FEED ═══════════ */
   .feed {
     max-width: 1100px;
     margin: 40px auto 0;
@@ -388,9 +374,6 @@
     gap: 34px;
   }
 
-  /* ══════════════════════════════════════════════
-     ПИСЬМО (активное) — конверт-лист
-     ══════════════════════════════════════════════ */
   .letter {
     position: relative;
     background: var(--paper);
@@ -417,7 +400,6 @@
     .letter { grid-template-columns: 1fr; padding: 26px 22px; }
   }
 
-  /* Внутренняя рамка */
   .letter::before {
     content: '';
     position: absolute;
@@ -426,7 +408,6 @@
     border-radius: 2px;
     pointer-events: none;
   }
-  /* Загнутый уголок */
   .letter::after {
     content: '';
     position: absolute;
@@ -507,7 +488,6 @@
     line-height: 1;
   }
 
-  /* Правая колонка письма: марка + штемпель */
   .letter-side {
     display: flex;
     flex-direction: column;
@@ -516,7 +496,6 @@
     position: relative;
   }
 
-  /* ═══════ SVG-МАРКА ═══════ */
   .stamp-svg {
     width: 90px;
     height: 104px;
@@ -525,7 +504,6 @@
     flex-shrink: 0;
   }
 
-  /* ═══════ SVG-ШТЕМПЕЛЬ ═══════ */
   .postmark-svg {
     width: 120px;
     height: 74px;
@@ -534,7 +512,6 @@
     flex-shrink: 0;
   }
 
-  /* ═══════ ТЕГ ═══════ */
   .tag {
     display: inline-flex;
     align-items: center;
@@ -558,9 +535,6 @@
   }
   .tag svg { width: 14px; height: 14px; flex-shrink: 0; }
 
-  /* ══════════════════════════════════════════════
-     ВКЛАДКА «Я НАЙДЕН» — конверт с содержимым
-     ══════════════════════════════════════════════ */
   .found-envelope {
     position: relative;
     display: grid;
@@ -588,7 +562,6 @@
       0 0 60px rgba(220, 160, 90, 0.25);
   }
 
-  /* Клапан конверта сверху */
   .found-envelope .flap {
     position: relative;
     height: 42px;
@@ -606,7 +579,6 @@
       radial-gradient(ellipse at 50% 100%, rgba(0,0,0,0.15), transparent 60%);
   }
 
-  /* Тело конверта */
   .found-envelope .body-env {
     padding: 26px 34px 30px;
     position: relative;
@@ -618,7 +590,6 @@
     .found-envelope .body-env { padding: 22px 20px 24px; }
   }
 
-  /* Шапка «Я НАЙДЕН» */
   .found-header {
     display: flex;
     align-items: center;
@@ -649,7 +620,6 @@
     opacity: 0.65;
   }
 
-  /* Оригинальное письмо (внутри конверта) — «сложено» */
   .orig-letter {
     position: relative;
     background: var(--paper);
@@ -703,7 +673,6 @@
     white-space: pre-wrap;
   }
 
-  /* Комментарий того, кто нашёлся */
   .response {
     position: relative;
     background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(230,215,180,0.4));
@@ -749,7 +718,6 @@
     opacity: 0.85;
   }
 
-  /* Бейдж «Доставлено» поверх конверта */
   .delivered-seal {
     position: absolute;
     top: 46%;
@@ -769,9 +737,6 @@
     }
   }
 
-  /* ══════════════════════════════════════════════
-     ABOUT — «Мы с вами»
-     ══════════════════════════════════════════════ */
   .about-block { grid-column: 1 / -1; }
 
   .about-letter {
@@ -972,7 +937,6 @@
     margin-top: 4px;
   }
 
-  /* ═══════════ EMPTY ═══════════ */
   .empty-state {
     text-align: center;
     padding: 70px 20px;
@@ -992,7 +956,6 @@
     filter: drop-shadow(0 6px 14px rgba(0,0,0,0.5));
   }
 
-  /* ═══════════ FOOTER ═══════════ */
   footer {
     max-width: 1100px;
     margin: 70px auto 0;
@@ -1012,7 +975,6 @@
     opacity: 0.5;
   }
 
-  /* ═══════════ МОДАЛКИ ═══════════ */
   .modal-bg {
     position: fixed; inset: 0;
     background: rgba(0,0,0,0.88);
@@ -1189,11 +1151,10 @@
   .form-modal textarea { min-height: 140px; resize: vertical; line-height: 1.4; }
   .form-modal select { cursor: pointer; }
 
-  /* ═══════════ АДАПТИВ ═══════════ */
   @media (max-width: 720px) {
     header { padding: 30px 16px 16px; }
     header h1 { letter-spacing: 6px; }
-    .dove-mark { width: 90px; height: 90px; }
+    .dove-mark { width: 120px; height: 92px; }
     .tabs { grid-template-columns: 1fr; gap: 10px; margin-top: 30px; }
     .tab { padding: 0; }
     .tab-inner { padding: 16px 14px 14px; flex-direction: row; gap: 14px; justify-content: flex-start; text-align: left; }
@@ -1217,7 +1178,6 @@
     .btn-new { width: 100%; justify-content: center; }
   }
 
-  /* Анимация появления */
   .letter, .found-envelope, .about-letter {
     animation: riseIn 0.7s cubic-bezier(0.2, 0.9, 0.3, 1) backwards;
   }
@@ -1240,126 +1200,40 @@
 
 <div class="vignette"></div>
 
-<!-- ═══════════ ГОЛУБЬ + ШАПКА ═══════════ -->
 <header>
 <div class="dove-mark" aria-label="Голубь Find Me">
-  <svg viewBox="0 0 140 100" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <!-- Мягкое свечение вокруг -->
-      <radialGradient id="doveGlow" cx="0.5" cy="0.5" r="0.5">
-        <stop offset="0%"  stop-color="#f4d9b0" stop-opacity="0.22"/>
-        <stop offset="60%" stop-color="#f4d9b0" stop-opacity="0.06"/>
-        <stop offset="100%" stop-color="#f4d9b0" stop-opacity="0"/>
-      </radialGradient>
-    </defs>
+  <svg viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg">
+    <!-- ЛЕТЯЩИЙ ГОЛУБЬ — ОДИН СИЛУЭТ -->
+    <path
+      d="
+        M 28 62
+        C 30 52, 42 44, 58 42
+        C 70 41, 80 44, 88 50
+        C 96 44, 108 40, 122 42
+        L 150 52
+        L 138 60
+        L 148 66
+        L 132 68
+        L 138 76
+        L 118 72
+        C 108 76, 96 78, 84 76
+        C 72 74, 62 68, 56 62
+        C 50 66, 42 68, 34 66
+        C 30 65, 28 64, 28 62
+        Z
+      "
+      fill="#f0e2c2"
+    />
 
-    <!-- Свечение под голубем -->
-    <ellipse cx="70" cy="50" rx="66" ry="42" fill="url(#doveGlow)"/>
-
-    <!-- ═══════════════════════════════════════
-         ГОЛУБЬ В ПОЛЁТЕ
-         Один контур. Один цвет. Ничего лишнего.
-         ═══════════════════════════════════════ -->
-    <path d="
-      M 22 46
-      L 8  40
-      L 14 50
-      L 2  48
-      L 16 54
-      L 22 56
-      Z
-    " fill="#f0e2c2"/>
-
-    <!-- Тело + голова + хвост — единый силуэт -->
-    <path d="
-      M 78 46
-      C 92 46, 104 50, 112 58
-      L 132 76
-      L 128 60
-      L 138 56
-      L 118 44
-      C 104 34, 90 32, 78 36
-      C 66 30, 54 30, 46 36
-      C 38 42, 36 50, 42 56
-      C 48 62, 60 66, 74 64
-      C 84 62, 92 56, 96 50
-      C 100 44, 92 46, 78 46
-      Z
-    " fill="#f0e2c2" opacity="0"/>
-
-    <!-- Верхнее крыло (взмах вверх) -->
-    <path d="
-      M 62 42
-      C 54 26, 40 16, 24 18
-      C 34 24, 40 34, 44 44
-      C 50 40, 56 40, 62 42
-      Z
-    " fill="#f0e2c2"/>
-
-    <!-- Тело -->
-    <path d="
-      M 40 52
-      C 38 42, 50 34, 68 34
-      C 86 34, 98 40, 108 50
-      C 116 58, 118 66, 114 72
-      C 108 78, 94 80, 78 78
-      C 62 76, 48 68, 42 60
-      C 39 57, 39 54, 40 52
-      Z
-    " fill="#f0e2c2"/>
-
-    <!-- Нижнее крыло (под телом) -->
-    <path d="
-      M 70 66
-      C 64 74, 56 80, 44 82
-      C 52 82, 60 80, 68 76
-      C 76 72, 82 68, 84 62
-      C 80 64, 74 66, 70 66
-      Z
-    " fill="#f0e2c2" opacity="0.85"/>
-
-    <!-- Хвост (веер снизу-справа) -->
-    <path d="
-      M 106 62
-      L 128 82
-      L 126 72
-      L 136 70
-      L 128 62
-      L 136 52
-      L 122 56
-      L 118 46
-      L 112 58
-      Z
-    " fill="#f0e2c2"/>
-
-    <!-- Голова -->
-    <circle cx="34" cy="46" r="11" fill="#f0e2c2"/>
-
-    <!-- Клюв -->
-    <path d="
-      M 24 44
-      L 14 46
-      L 24 49
-      Z
-    " fill="#f0e2c2"/>
-
-    <!-- ═══════════════════════════════════════
-         ПИСЬМО В КЛЮВЕ
-         ═══════════════════════════════════════ -->
-    <g transform="translate(4, 42)">
-      <!-- Конверт -->
-      <rect x="0" y="0" width="16" height="11" rx="0.8"
-            fill="#2d2519" stroke="#f0e2c2" stroke-width="1"/>
-      <!-- Клапан -->
-      <path d="M0 1 L 8 6.5 L 16 1" fill="none" stroke="#f0e2c2" stroke-width="0.8"/>
-      <!-- Сургучная печать -->
-      <circle cx="8" cy="7" r="2" fill="#8b2a2a" stroke="#f0e2c2" stroke-width="0.6"/>
+    <!-- ПИСЬМО В КЛЮВЕ -->
+    <g transform="translate(6, 52) rotate(-8)">
+      <rect x="0" y="0" width="22" height="15" rx="1"
+            fill="#2d2519" stroke="#f0e2c2" stroke-width="1.4"/>
+      <path d="M0 1.5 L11 9 L22 1.5"
+            fill="none" stroke="#f0e2c2" stroke-width="1.1"/>
+      <circle cx="11" cy="9.5" r="2.6"
+              fill="#8b2a2a" stroke="#f0e2c2" stroke-width="0.8"/>
     </g>
-
-    <!-- ═══════════════════════════════════════
-         АНИМАЦИЯ ВЗМАХА (пульсирующая прозрачность
-         верхнего крыла через keyframes в CSS)
-         ═══════════════════════════════════════ -->
   </svg>
 </div>
 
@@ -1371,12 +1245,10 @@
   </div>
 </header>
 
-<!-- ═══════════ ЦИТАТА ═══════════ -->
 <section class="hero">
   <p class="hero-quote">Иногда достаточно одного письма, чтобы вернуть целую жизнь.</p>
 </section>
 
-<!-- ═══════════ ПАНЕЛЬ ═══════════ -->
 <div class="toolbar">
   <input id="search" placeholder="Поиск по имени, городу, приметам…">
   <select id="filter">
@@ -1393,13 +1265,11 @@
   </button>
 </div>
 
-<!-- ═══════════ ВКЛАДКИ ═══════════ -->
 <nav class="tabs" id="tabs">
   <button class="tab active" data-tab="searching">
     <div class="tab-inner">
       <span class="tab-badge" id="badge-searching">0</span>
       <div class="tab-icon">
-        <!-- Лупа -->
         <svg viewBox="0 0 40 40" fill="none">
           <circle cx="17" cy="17" r="10" stroke="#e8d9b4" stroke-width="2.4"/>
           <path d="M25 25 L34 34" stroke="#e8d9b4" stroke-width="3.2" stroke-linecap="round"/>
@@ -1416,7 +1286,6 @@
     <div class="tab-inner">
       <span class="tab-badge" id="badge-found">0</span>
       <div class="tab-icon">
-        <!-- Открытый конверт с письмом -->
         <svg viewBox="0 0 40 40" fill="none">
           <path d="M6 18 L20 8 L34 18 L34 32 L6 32 Z" fill="#e8d9b4" stroke="rgba(120,90,50,0.7)" stroke-width="1.4" stroke-linejoin="round"/>
           <path d="M6 18 L20 26 L34 18" fill="none" stroke="rgba(120,90,50,0.7)" stroke-width="1.4"/>
@@ -1432,7 +1301,6 @@
   <button class="tab" data-tab="about">
     <div class="tab-inner">
       <div class="tab-icon">
-        <!-- Перо -->
         <svg viewBox="0 0 40 40" fill="none">
           <path d="M28 6 C 20 8, 12 18, 10 30 L 14 32 C 18 24, 26 14, 32 10 Z"
                 fill="#e8d9b4" stroke="rgba(120,90,50,0.7)" stroke-width="1.2" stroke-linejoin="round"/>
@@ -1447,7 +1315,6 @@
   </button>
 </nav>
 
-<!-- ═══════════ ЛЕНТА ═══════════ -->
 <main class="feed" id="feed"></main>
 
 <footer>
@@ -1458,7 +1325,6 @@
   Find Me — тёплое место, где встречи случаются снова
 </footer>
 
-<!-- ═══════════ МОДАЛКА ПРОСМОТРА ═══════════ -->
 <div class="modal-bg" id="viewModal">
   <div class="modal">
     <button class="close" onclick="closeModal('viewModal')">✕</button>
@@ -1472,7 +1338,6 @@
   </div>
 </div>
 
-<!-- ═══════════ МОДАЛКА НОВОГО ПИСЬМА ═══════════ -->
 <div class="modal-bg" id="formModal">
   <div class="modal form-modal">
     <button class="close" onclick="closeModal('formModal')">✕</button>
@@ -1495,9 +1360,6 @@
 </div>
 
 <script>
-  /* ═══════════ SVG-КОМПОНЕНТЫ ═══════════ */
-
-  // Марка (в стиле: поиск — синяя, отклик — коричневая)
   function svgStamp(type) {
     const colors = {
       search: { bg1: '#b8c8d4', bg2: '#a2b4c2', ink: '#2d4a5e', label: 'ИЩУ' },
@@ -1507,71 +1369,47 @@
     return `
       <svg class="stamp-svg" viewBox="0 0 90 104" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <pattern id="perf-${type}" x="0" y="0" width="6" height="6" patternUnits="userSpaceOnUse">
-            <rect width="6" height="6" fill="${c.bg1}"/>
-            <rect x="0" y="0" width="3" height="3" fill="${c.bg2}"/>
-          </pattern>
           <linearGradient id="stampGrad-${type}" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stop-color="${c.bg1}"/>
             <stop offset="100%" stop-color="${c.bg2}"/>
           </linearGradient>
         </defs>
-
-        <!-- Перфорация (зубчатый край) -->
         <g>
           ${Array.from({length: 15}, (_, i) => `<circle cx="${3 + i * 6}" cy="2" r="1.6" fill="#f2e7cd"/>`).join('')}
           ${Array.from({length: 15}, (_, i) => `<circle cx="${3 + i * 6}" cy="102" r="1.6" fill="#f2e7cd"/>`).join('')}
           ${Array.from({length: 17}, (_, i) => `<circle cx="2" cy="${3 + i * 6}" r="1.6" fill="#f2e7cd"/>`).join('')}
           ${Array.from({length: 17}, (_, i) => `<circle cx="88" cy="${3 + i * 6}" r="1.6" fill="#f2e7cd"/>`).join('')}
         </g>
-
-        <!-- Тело марки -->
         <rect x="4" y="4" width="82" height="96" fill="url(#stampGrad-${type})"/>
-
-        <!-- Внутренняя рамка -->
         <rect x="8" y="8" width="74" height="88" fill="none" stroke="${c.ink}" stroke-width="0.8" opacity="0.55"/>
         <rect x="11" y="11" width="68" height="82" fill="none" stroke="${c.ink}" stroke-width="0.4" opacity="0.35" stroke-dasharray="1 1.5"/>
-
-        <!-- Верх: год -->
         <text x="45" y="22" font-family="'Special Elite', monospace" font-size="6" fill="${c.ink}" text-anchor="middle" letter-spacing="1.5" opacity="0.7">FIND·ME</text>
-
-        <!-- Центр: символ (голубь или конверт) -->
         <g transform="translate(45, 52)">
           <circle r="17" fill="none" stroke="${c.ink}" stroke-width="0.7" opacity="0.4"/>
           <circle r="15" fill="none" stroke="${c.ink}" stroke-width="0.3" opacity="0.3" stroke-dasharray="1 1.5"/>
-          <!-- Силуэт голубя -->
           <path d="M-9 2 C-8 -4, -3 -7, 3 -6 C7 -5, 9 -2, 9 2 C9 6, 6 9, 2 9 C-3 10, -8 8, -9 4 Z"
                 fill="${c.ink}" opacity="0.85"/>
           <path d="M-6 -1 C-4 -5, 1 -6, 5 -3 C6 -1, 5 2, 2 3 C-2 4, -5 2, -6 -1 Z"
                 fill="${c.bg1}" opacity="0.9"/>
-          <!-- Письмо в клюве -->
           <rect x="-13" y="-1" width="6" height="4" fill="${c.bg1}" stroke="${c.ink}" stroke-width="0.4"/>
           <path d="M-13 0 L-10 2 L-7 0" stroke="${c.ink}" stroke-width="0.3" fill="none"/>
-          <!-- Глаз -->
           <circle cx="-4" cy="-2" r="0.6" fill="${c.bg1}"/>
         </g>
-
-        <!-- Низ: надпись -->
         <text x="45" y="88" font-family="'Special Elite', monospace" font-size="7" fill="${c.ink}" text-anchor="middle" letter-spacing="1.2">${c.label}</text>
-
-        <!-- Год -->
         <text x="45" y="97" font-family="'Special Elite', monospace" font-size="5" fill="${c.ink}" text-anchor="middle" letter-spacing="0.8" opacity="0.6">2026 · ПОЧТА</text>
       </svg>
     `;
   }
 
-  // Штемпель (круглый почтовый оттиск)
   function svgPostmark(number) {
     return `
       <svg class="postmark-svg" viewBox="0 0 120 74" xmlns="http://www.w3.org/2000/svg">
-        <!-- Линии-«волны» слева -->
         <g stroke="#2d4a5e" stroke-width="0.7" fill="none" opacity="0.5">
           <path d="M2 20 Q 6 16, 10 20 T 18 20 T 26 20"/>
           <path d="M2 30 Q 6 26, 10 30 T 18 30 T 26 30"/>
           <path d="M2 40 Q 6 36, 10 40 T 18 40 T 26 40"/>
           <path d="M2 50 Q 6 46, 10 50 T 18 50 T 26 50"/>
         </g>
-        <!-- Круг штемпеля -->
         <circle cx="72" cy="37" r="30" fill="none" stroke="#2d4a5e" stroke-width="1.4" opacity="0.55"/>
         <circle cx="72" cy="37" r="26" fill="none" stroke="#2d4a5e" stroke-width="0.6" opacity="0.45" stroke-dasharray="2 2"/>
         <text x="72" y="32" font-family="'Special Elite', monospace" font-size="6" fill="#2d4a5e" text-anchor="middle" letter-spacing="1" opacity="0.75">FIND·ME</text>
@@ -1581,7 +1419,6 @@
     `;
   }
 
-  // Печать «ДОСТАВЛЕНО» (для вкладки «Я найден»)
   function svgDelivered() {
     return `
       <svg class="delivered-seal" viewBox="0 0 220 90" xmlns="http://www.w3.org/2000/svg" width="220" height="90">
@@ -1595,7 +1432,6 @@
     `;
   }
 
-  /* ═══════════ ДАННЫЕ ═══════════ */
   const posts = [
     {
       id: 1, type: 'search',
@@ -1621,7 +1457,6 @@
       body: `В ноябре 2008 года горел наш дом на улице Мира. Меня вынес сосед с пятого этажа — молодой мужчина, звали, кажется, Андрей.\n\nОн потом уехал, я не успела даже поблагодарить. Помню: высокий, светлые волосы, играл на гитаре у подъезда по вечерам.`,
       status: 'open'
     },
-    /* ═══ НАЙДЕННЫЕ ═══ */
     {
       id: 4, type: 'search',
       title: 'Нашёл школьную учительницу!',
@@ -1654,7 +1489,6 @@
     }
   ];
 
-  /* ═══════════ СОСТОЯНИЕ ═══════════ */
   let currentTab = 'searching';
   const feed = document.getElementById('feed');
 
@@ -1719,7 +1553,6 @@
     }
   }
 
-  /* ═══ ПИСЬМО (активное) ═══ */
   function renderLetter(p, i) {
     const tilt = (Math.random() * 1.2 - 0.6).toFixed(2);
     const num = String(p.id).padStart(4, '0');
@@ -1761,7 +1594,6 @@
     `;
   }
 
-  /* ═══ КОНВЕРТ С ОТВЕТОМ (найденное) ═══ */
   function renderFoundEnvelope(p, i) {
     const tilt = (Math.random() * 1.0 - 0.5).toFixed(2);
     const num = String(p.id).padStart(4, '0');
@@ -1777,7 +1609,6 @@
 
           <div class="found-header">
             <div class="left">
-              <!-- голубь с письмом -->
               <svg viewBox="0 0 40 40" fill="none">
                 <path d="M8 22 C9 16, 14 12, 22 13 C28 14, 31 18, 31 23 C31 28, 27 32, 21 33 C14 34, 9 30, 8 25 C7 24, 7 23, 8 22 Z"
                       fill="#5e6f4a" opacity="0.85"/>
@@ -1793,14 +1624,12 @@
             <div class="right">${p.author} · ${p.city} · ${p.date}</div>
           </div>
 
-          <!-- Оригинальное письмо -->
           <div class="orig-letter">
             <h4>${p.title}</h4>
             <div class="orig-meta">${p.author} · ${p.city} · ${p.years}</div>
             <p>${p.body}</p>
           </div>
 
-          <!-- Комментарий нашедшего -->
           <div class="response">
             <div class="response-head">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1819,7 +1648,6 @@
     `;
   }
 
-  /* ═══ ABOUT ═══ */
   function renderAbout() {
     return `
       <div class="about-block">
@@ -1914,7 +1742,6 @@
     `;
   }
 
-  /* ═══════════ МОДАЛКА ═══════════ */
   function openPost(id) {
     const p = posts.find(x => x.id === id);
     document.getElementById('m-title').textContent = p.title;
