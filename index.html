@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Find Me — Почтовое отделение, где находят людей</title>
+<title>Find Me — почтовое отделение, где находят людей</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Caveat:wght@400;500;700&family=Special+Elite&family=Marck+Script&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Caveat:wght@400;500;700&family=Special+Elite&family=Marck+Script&display=swap" rel="stylesheet">
 
 <style>
   :root {
@@ -15,6 +15,7 @@
     --paper-warm:   #ecdcb8;
     --paper-aged:   #e3d1a6;
     --paper-dark:   #d9c9a1;
+    --paper-shadow: #c9b689;
     --ink:          #2a2118;
     --ink-soft:     #4a3d2a;
     --ink-faded:    #6b5a3d;
@@ -28,12 +29,10 @@
     --wood-dark:    #1a1610;
     --wood:         #2d2519;
     --wood-warm:    #3a2f1e;
-    --stamp-blue:   #2d4a5e;
-    --stamp-violet: #4a2d5e;
+    --blue-stamp:   #2d4a5e;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
   html { scroll-behavior: smooth; }
 
   body {
@@ -46,14 +45,12 @@
     overflow-x: hidden;
   }
 
-  /* ══════════════════════════════════════════════
-     ФОН: дерево, свет, шум, виньетка
-     ══════════════════════════════════════════════ */
+  /* ═══════════ ФОН ═══════════ */
   body::before {
     content: '';
     position: fixed; inset: 0;
     background:
-      radial-gradient(ellipse at 15% 0%, rgba(255, 220, 160, 0.18), transparent 50%),
+      radial-gradient(ellipse at 15% 0%, rgba(255, 220, 160, 0.16), transparent 50%),
       radial-gradient(ellipse at 85% 100%, rgba(255, 200, 140, 0.08), transparent 55%),
       repeating-linear-gradient(91deg,
         rgba(0,0,0,0.10) 0px, rgba(0,0,0,0.10) 2px,
@@ -74,77 +71,56 @@
   .vignette {
     position: fixed; inset: 0;
     pointer-events: none;
-    background: radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.7) 110%);
+    background: radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.72) 110%);
     z-index: 0;
   }
-
   header, .toolbar, .tabs, .feed, footer, .hero { position: relative; z-index: 2; }
 
   /* ══════════════════════════════════════════════
-     HEADER — шапка почтового отделения
+     HEADER с голубем
      ══════════════════════════════════════════════ */
   header {
-    max-width: 960px;
+    max-width: 1100px;
     margin: 0 auto;
-    padding: 50px 20px 30px;
+    padding: 46px 24px 20px;
     text-align: center;
     color: var(--paper);
     position: relative;
   }
 
-  .logo-mark {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 84px; height: 84px;
-    margin-bottom: 18px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, #b84040, var(--seal) 45%, var(--seal-dark) 100%);
-    box-shadow:
-      inset 0 -6px 12px rgba(0,0,0,0.6),
-      inset 0 6px 8px rgba(255,180,140,0.35),
-      0 14px 32px rgba(0,0,0,0.7),
-      0 0 0 3px rgba(255,220,180,0.12),
-      0 0 60px rgba(200,90,60,0.35);
+  .dove-mark {
+    display: inline-block;
+    width: 120px;
+    height: 120px;
+    margin-bottom: 8px;
+    filter: drop-shadow(0 12px 24px rgba(0,0,0,0.7)) drop-shadow(0 0 40px rgba(220, 200, 150, 0.25));
     position: relative;
-    animation: sealPulse 5s ease-in-out infinite;
+    animation: doveFloat 6s ease-in-out infinite;
   }
-  .logo-mark::before {
-    content: '✉';
-    font-size: 36px;
-    color: #f4d9b0;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.7);
+  .dove-mark svg { width: 100%; height: 100%; display: block; }
+  @keyframes doveFloat {
+    0%, 100% { transform: translateY(0) rotate(-2deg); }
+    50%      { transform: translateY(-8px) rotate(2deg); }
   }
-  .logo-mark::after {
-    content: '';
-    position: absolute;
-    inset: -6px;
-    border-radius: 50%;
-    border: 1px dashed rgba(255,220,180,0.25);
-    animation: rotateSlow 40s linear infinite;
-  }
-  @keyframes sealPulse {
-    0%, 100% { box-shadow: inset 0 -6px 12px rgba(0,0,0,0.6), inset 0 6px 8px rgba(255,180,140,0.35), 0 14px 32px rgba(0,0,0,0.7), 0 0 0 3px rgba(255,220,180,0.12), 0 0 60px rgba(200,90,60,0.35); }
-    50%      { box-shadow: inset 0 -6px 12px rgba(0,0,0,0.6), inset 0 6px 8px rgba(255,180,140,0.35), 0 14px 40px rgba(0,0,0,0.75), 0 0 0 5px rgba(255,220,180,0.22), 0 0 90px rgba(220,110,70,0.55); }
-  }
-  @keyframes rotateSlow { to { transform: rotate(360deg); } }
 
   header h1 {
     font-family: 'Special Elite', serif;
-    font-size: clamp(2rem, 5.5vw, 3.4rem);
+    font-size: clamp(2rem, 5.5vw, 3.2rem);
     font-weight: 400;
-    letter-spacing: 10px;
-    margin-bottom: 14px;
+    letter-spacing: 12px;
+    margin-bottom: 12px;
     color: #f0e2c2;
     text-shadow:
       0 1px 0 #000,
       0 3px 10px rgba(0,0,0,0.9),
       0 0 40px rgba(200,140,80,0.4);
+    padding-left: 12px;
   }
   header h1 .dot {
     display: inline-block;
     color: var(--seal-light);
-    transform: translateY(-4px);
+    transform: translateY(-6px);
+    font-size: 0.5em;
   }
   header .subtitle {
     font-family: 'Caveat', cursive;
@@ -155,41 +131,41 @@
     margin: 0 auto;
     line-height: 1.3;
   }
-  .header-ornament {
+
+  .header-rule {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 14px;
-    margin-top: 22px;
+    gap: 16px;
+    margin-top: 26px;
     color: var(--gold);
-    opacity: 0.6;
+    opacity: 0.55;
   }
-  .header-ornament::before,
-  .header-ornament::after {
+  .header-rule::before,
+  .header-rule::after {
     content: '';
     height: 1px;
-    width: 60px;
+    flex: 1;
+    max-width: 180px;
     background: linear-gradient(90deg, transparent, var(--gold), transparent);
   }
-  .header-ornament span {
+  .header-rule span {
     font-family: 'Special Elite', serif;
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     letter-spacing: 3px;
     color: var(--gold-light);
   }
 
-  /* ══════════════════════════════════════════════
-     HERO — верхний баннер почтамта
-     ══════════════════════════════════════════════ */
+  /* ═══════════ ЦИТАТА ═══════════ */
   .hero {
-    max-width: 960px;
-    margin: 30px auto 0;
-    padding: 0 20px;
+    max-width: 1100px;
+    margin: 26px auto 0;
+    padding: 0 24px;
     text-align: center;
   }
   .hero-quote {
     font-family: 'Marck Script', cursive;
-    font-size: 1.6rem;
+    font-size: 1.55rem;
     color: #d9c9a1;
     opacity: 0.85;
     line-height: 1.4;
@@ -197,26 +173,12 @@
     margin: 0 auto;
     position: relative;
   }
-  .hero-quote::before,
-  .hero-quote::after {
-    content: '"';
-    font-size: 3rem;
-    color: var(--gold);
-    opacity: 0.5;
-    font-family: 'Cormorant Garamond', serif;
-    line-height: 0;
-    vertical-align: -0.35em;
-  }
-  .hero-quote::before { margin-right: 8px; }
-  .hero-quote::after  { margin-left: 8px; }
 
-  /* ══════════════════════════════════════════════
-     TOOLBAR
-     ══════════════════════════════════════════════ */
+  /* ═══════════ TOOLBAR ═══════════ */
   .toolbar {
-    max-width: 960px;
-    margin: 34px auto 0;
-    padding: 0 20px;
+    max-width: 1100px;
+    margin: 30px auto 0;
+    padding: 0 24px;
     display: flex;
     gap: 12px;
     flex-wrap: wrap;
@@ -227,8 +189,8 @@
   .toolbar input,
   .toolbar select {
     padding: 13px 18px;
-    border: 1px solid rgba(180, 140, 80, 0.35);
-    border-radius: 8px;
+    border: 1px solid rgba(180, 140, 80, 0.3);
+    border-radius: 6px;
     font-family: 'Cormorant Garamond', serif;
     font-size: 1rem;
     background: rgba(30, 24, 15, 0.75);
@@ -246,15 +208,15 @@
     box-shadow: inset 0 1px 0 rgba(255,220,160,0.15), 0 0 0 3px rgba(176, 138, 62, 0.25), 0 6px 20px rgba(0,0,0,0.5);
   }
   .toolbar input { flex: 1; min-width: 240px; }
-  .toolbar select { cursor: pointer; min-width: 170px; }
+  .toolbar select { cursor: pointer; min-width: 180px; }
   .toolbar select option { background: #2d2519; color: #efe2c4; }
 
   .btn-new {
     padding: 13px 26px;
     border: none;
-    border-radius: 8px;
+    border-radius: 6px;
     font-family: 'Special Elite', serif;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     letter-spacing: 1.5px;
     text-transform: uppercase;
     cursor: pointer;
@@ -268,7 +230,11 @@
     transition: 0.25s;
     position: relative;
     overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
   }
+  .btn-new svg { width: 16px; height: 16px; }
   .btn-new::after {
     content: '';
     position: absolute;
@@ -286,15 +252,12 @@
       0 0 0 1px rgba(255,200,160,0.2);
   }
   .btn-new:hover::after { left: 100%; }
-  .btn-new:active { transform: translateY(0); }
 
-  /* ══════════════════════════════════════════════
-     TABS — деревянные ящики-вкладки
-     ══════════════════════════════════════════════ */
+  /* ═══════════ TABS ═══════════ */
   .tabs {
-    max-width: 960px;
-    margin: 44px auto 0;
-    padding: 0 20px;
+    max-width: 1100px;
+    margin: 42px auto 0;
+    padding: 0 24px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 14px;
@@ -302,19 +265,18 @@
 
   .tab {
     position: relative;
-    padding: 26px 20px 22px;
+    padding: 0;
     border: none;
     cursor: pointer;
     background: none;
     font-family: inherit;
     text-align: center;
     transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.2);
-    perspective: 800px;
   }
 
   .tab-inner {
     position: relative;
-    padding: 24px 18px 20px;
+    padding: 22px 16px 18px;
     border-radius: 8px 8px 4px 4px;
     background:
       linear-gradient(180deg, #4a3c26 0%, #3a2f1e 50%, #2b2215 100%);
@@ -329,8 +291,10 @@
     border: 1px solid rgba(120, 90, 50, 0.4);
     transition: 0.3s;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
-
   .tab-inner::before {
     content: '';
     position: absolute;
@@ -338,7 +302,6 @@
     height: 4px;
     background: linear-gradient(90deg, transparent, rgba(255,220,160,0.25), transparent);
   }
-
   .tab:hover .tab-inner {
     transform: translateY(-4px);
     box-shadow:
@@ -347,7 +310,6 @@
       0 14px 28px rgba(0,0,0,0.7),
       0 0 30px rgba(200, 140, 80, 0.15);
   }
-
   .tab.active .tab-inner {
     background:
       linear-gradient(180deg, #5e4a2c 0%, #4a3a22 50%, #3a2c18 100%);
@@ -359,52 +321,41 @@
       0 0 40px rgba(200, 140, 80, 0.4);
     transform: translateY(-6px);
   }
-  .tab.active .tab-inner::after {
-    content: '';
-    position: absolute;
-    bottom: -8px; left: 50%;
-    transform: translateX(-50%);
-    width: 60%;
-    height: 8px;
-    background: radial-gradient(ellipse, rgba(200,140,80,0.5), transparent 70%);
-    filter: blur(3px);
-  }
 
   .tab-icon {
-    display: block;
-    font-size: 1.8rem;
+    width: 42px; height: 42px;
     margin-bottom: 10px;
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
   }
+  .tab-icon svg { width: 100%; height: 100%; display: block; }
+
   .tab-title {
-    display: block;
     font-family: 'Special Elite', serif;
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     letter-spacing: 2px;
     text-transform: uppercase;
     color: #f0e2c2;
-    margin-bottom: 6px;
+    margin-bottom: 5px;
     text-shadow: 0 1px 2px rgba(0,0,0,0.8);
   }
   .tab-sub {
-    display: block;
     font-family: 'Caveat', cursive;
-    font-size: 1rem;
+    font-size: 0.98rem;
     color: #cbb48a;
     opacity: 0.75;
     line-height: 1.2;
   }
   .tab-badge {
     position: absolute;
-    top: 10px; right: 12px;
-    min-width: 26px;
-    height: 26px;
-    padding: 0 8px;
-    border-radius: 13px;
+    top: 12px; right: 14px;
+    min-width: 28px;
+    height: 28px;
+    padding: 0 9px;
+    border-radius: 14px;
     background: radial-gradient(circle at 35% 30%, #b84040, var(--seal-dark));
     color: #f4d9b0;
     font-family: 'Special Elite', serif;
-    font-size: 0.75rem;
+    font-size: 0.78rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -415,21 +366,19 @@
     background: radial-gradient(circle at 35% 30%, #d4b06a, #8b6a2a);
   }
 
-  /* ══════════════════════════════════════════════
-     FEED — лента писем
-     ══════════════════════════════════════════════ */
+  /* ═══════════ FEED ═══════════ */
   .feed {
-    max-width: 960px;
+    max-width: 1100px;
     margin: 40px auto 0;
-    padding: 0 20px;
+    padding: 0 24px;
     display: grid;
-    gap: 32px;
+    gap: 34px;
   }
 
   /* ══════════════════════════════════════════════
-     КОНВЕРТ (письмо)
+     ПИСЬМО (активное) — конверт-лист
      ══════════════════════════════════════════════ */
-  .envelope {
+  .letter {
     position: relative;
     background: var(--paper);
     background-image:
@@ -438,29 +387,34 @@
       radial-gradient(ellipse at 50% 50%, rgba(210,180,130,0.15), transparent 70%),
       repeating-linear-gradient(0deg, transparent 0px, transparent 27px, rgba(120,90,50,0.045) 27px, rgba(120,90,50,0.045) 28px);
     border-radius: 3px;
-    padding: 36px 38px 32px;
+    padding: 34px 120px 30px 34px;
     cursor: pointer;
     box-shadow:
       0 1px 0 rgba(255,255,255,0.5) inset,
       0 24px 48px -10px rgba(0,0,0,0.7),
       0 10px 20px -6px rgba(0,0,0,0.5);
     transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s;
-    transform-origin: center;
     transform: rotate(var(--tilt, 0deg));
+    display: grid;
+    grid-template-columns: 1fr 130px;
+    gap: 26px;
+    align-items: start;
+  }
+  @media (max-width: 720px) {
+    .letter { grid-template-columns: 1fr; padding: 26px 22px; }
   }
 
-  /* Внутренняя рамка-обводка */
-  .envelope::before {
+  /* Внутренняя рамка */
+  .letter::before {
     content: '';
     position: absolute;
     inset: 12px;
-    border: 1px solid rgba(120, 90, 50, 0.15);
+    border: 1px solid rgba(120, 90, 50, 0.14);
     border-radius: 2px;
     pointer-events: none;
   }
-
   /* Загнутый уголок */
-  .envelope::after {
+  .letter::after {
     content: '';
     position: absolute;
     right: 0; bottom: 0;
@@ -470,8 +424,7 @@
     border-top-left-radius: 4px;
     z-index: 2;
   }
-
-  .envelope:hover {
+  .letter:hover {
     transform: translateY(-8px) rotate(calc(var(--tilt, 0deg) - 0.5deg));
     box-shadow:
       0 1px 0 rgba(255,255,255,0.5) inset,
@@ -480,114 +433,47 @@
       0 0 60px rgba(220, 160, 90, 0.2);
   }
 
-  /* ── МАРКА ── */
-  .stamp {
-    position: absolute;
-    top: 22px; right: 26px;
-    width: 68px; height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Special Elite', serif;
-    font-size: 0.6rem;
-    letter-spacing: 1.2px;
-    text-align: center;
-    padding: 6px;
-    color: #4a3a1a;
-    z-index: 3;
-    transform: rotate(7deg);
-    background:
-      repeating-linear-gradient(45deg, #cdb98e, #cdb98e 6px, #b9a271 6px, #b9a271 12px);
-    border: 2px dashed #7a6538;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-  }
-  .stamp::after {
-    content: '';
-    position: absolute;
-    inset: 5px;
-    border: 1px solid rgba(120,90,50,0.45);
-  }
-  .stamp.search  { color: #2d4a5e; border-color: #3f5a6e; background: repeating-linear-gradient(45deg, #b8c8d4, #b8c8d4 6px, #a2b4c2 6px, #a2b4c2 12px); }
-  .stamp.wanted  { color: #5e3a2d; border-color: #7e503e; background: repeating-linear-gradient(45deg, #d4b8a8, #d4b8a8 6px, #c2a290 6px, #c2a290 12px); }
-  .stamp.found   { color: #4a5e3a; border-color: #5e7e4a; background: repeating-linear-gradient(45deg, #c0d0a8, #c0d0a8 6px, #a8bc90 6px, #a8bc90 12px); }
+  .letter-main { min-width: 0; }
 
-  /* ── ШТЕМПЕЛЬ ── */
-  .postmark {
-    position: absolute;
-    top: 34px; right: 96px;
-    width: 120px; height: 70px;
-    border: 2px solid rgba(45, 74, 94, 0.4);
-    border-radius: 50%;
-    transform: rotate(-14deg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Special Elite', serif;
-    font-size: 0.55rem;
-    letter-spacing: 1.5px;
-    color: rgba(45, 74, 94, 0.55);
-    text-align: center;
-    line-height: 1.3;
-    text-transform: uppercase;
-    opacity: 0.7;
-    z-index: 2;
-    pointer-events: none;
-  }
-  .postmark::before,
-  .postmark::after {
-    content: '';
-    position: absolute;
-    left: -18px;
-    width: 14px;
-    height: 1px;
-    background: rgba(45, 74, 94, 0.4);
-  }
-  .postmark::before { top: 24px; }
-  .postmark::after  { bottom: 24px; }
-
-  /* ── ТЕКСТ ── */
-  .envelope .letter-head {
+  .letter-head {
     display: flex;
     align-items: baseline;
-    gap: 10px;
-    margin-bottom: 8px;
+    gap: 12px;
+    margin-bottom: 10px;
     flex-wrap: wrap;
   }
-  .envelope .number {
+  .letter-number {
     font-family: 'Special Elite', serif;
     font-size: 0.68rem;
     letter-spacing: 1.5px;
     color: var(--ink-faded);
     opacity: 0.6;
   }
-  .envelope h3 {
+  .letter h3 {
     font-family: 'Cormorant Garamond', serif;
     font-weight: 700;
     font-size: 1.5rem;
     line-height: 1.22;
     margin-bottom: 12px;
-    padding-right: 200px;
     color: var(--ink);
-    letter-spacing: 0.3px;
+    letter-spacing: 0.2px;
   }
-  @media (max-width: 720px) { .envelope h3 { padding-right: 90px; } .postmark { display: none; } }
-
-  .envelope .meta {
+  .letter .meta {
     font-family: 'Special Elite', serif;
     font-size: 0.7rem;
     letter-spacing: 1.5px;
     text-transform: uppercase;
     color: var(--ink-soft);
-    opacity: 0.75;
+    opacity: 0.72;
     margin-bottom: 16px;
     display: flex;
     flex-wrap: wrap;
     gap: 8px 14px;
     align-items: center;
   }
-  .envelope .meta .dot { opacity: 0.4; }
+  .letter .meta .dot { opacity: 0.4; }
 
-  .envelope .excerpt {
+  .letter .excerpt {
     font-family: 'Caveat', cursive;
     font-size: 1.35rem;
     line-height: 1.35;
@@ -596,19 +482,46 @@
     position: relative;
     padding-left: 26px;
   }
-  .envelope .excerpt::before {
+  .letter .excerpt::before {
     content: '«';
     position: absolute;
     left: 0;
-    top: -8px;
+    top: -10px;
     font-family: 'Cormorant Garamond', serif;
     font-size: 2.4rem;
     color: var(--gold);
-    opacity: 0.6;
+    opacity: 0.55;
     line-height: 1;
   }
 
-  /* ── ТЕГ ── */
+  /* Правая колонка письма: марка + штемпель */
+  .letter-side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 14px;
+    position: relative;
+  }
+
+  /* ═══════ SVG-МАРКА ═══════ */
+  .stamp-svg {
+    width: 90px;
+    height: 104px;
+    transform: rotate(6deg);
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+    flex-shrink: 0;
+  }
+
+  /* ═══════ SVG-ШТЕМПЕЛЬ ═══════ */
+  .postmark-svg {
+    width: 120px;
+    height: 74px;
+    opacity: 0.85;
+    transform: rotate(-14deg);
+    flex-shrink: 0;
+  }
+
+  /* ═══════ ТЕГ ═══════ */
   .tag {
     display: inline-flex;
     align-items: center;
@@ -627,85 +540,226 @@
       inset 0 -2px 4px rgba(0,0,0,0.3),
       0 4px 10px rgba(0,0,0,0.3);
   }
-  .tag.seal {
-    background: linear-gradient(180deg, var(--seal-light) 0%, var(--seal-dark) 100%);
-  }
   .tag.wanted {
     background: linear-gradient(180deg, #6e4a3a 0%, #4e2f24 100%);
   }
-  .tag::before {
-    content: '';
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.85);
-    box-shadow: 0 0 8px rgba(255,255,255,0.8);
+  .tag svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+  /* ══════════════════════════════════════════════
+     ВКЛАДКА «Я НАЙДЕН» — конверт с содержимым
+     ══════════════════════════════════════════════ */
+  .found-envelope {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow:
+      0 28px 60px -12px rgba(0,0,0,0.8),
+      0 12px 24px -6px rgba(0,0,0,0.55),
+      0 0 0 1px rgba(120, 90, 50, 0.35);
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s;
+    transform: rotate(var(--tilt, 0deg));
+    cursor: pointer;
+    background: var(--paper-aged);
+    background-image:
+      radial-gradient(ellipse at 20% 20%, rgba(255,255,255,0.4), transparent 40%),
+      radial-gradient(ellipse at 80% 90%, rgba(140,110,70,0.3), transparent 50%);
+  }
+  .found-envelope:hover {
+    transform: translateY(-8px) rotate(calc(var(--tilt, 0deg) - 0.4deg));
+    box-shadow:
+      0 40px 80px -14px rgba(0,0,0,0.9),
+      0 18px 34px -8px rgba(0,0,0,0.6),
+      0 0 0 1px var(--gold),
+      0 0 60px rgba(220, 160, 90, 0.25);
   }
 
-  /* ── Печать «нашлись» ── */
-  .found-seal {
+  /* Клапан конверта сверху */
+  .found-envelope .flap {
+    position: relative;
+    height: 42px;
+    background: linear-gradient(180deg, #d6c398 0%, #c9b689 60%, #bfa878 100%);
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+    z-index: 3;
+    margin-bottom: -1px;
+  }
+  .found-envelope .flap::before {
+    content: '';
     position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%) rotate(-14deg);
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 50% 100%, rgba(0,0,0,0.15), transparent 60%);
+  }
+
+  /* Тело конверта */
+  .found-envelope .body-env {
+    padding: 26px 34px 30px;
+    position: relative;
+    background: var(--paper-warm);
+    background-image:
+      repeating-linear-gradient(0deg, transparent 0px, transparent 27px, rgba(120,90,50,0.045) 27px, rgba(120,90,50,0.045) 28px);
+  }
+  @media (max-width: 720px) {
+    .found-envelope .body-env { padding: 22px 20px 24px; }
+  }
+
+  /* Шапка «Я НАЙДЕН» */
+  .found-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+    padding-bottom: 16px;
+    margin-bottom: 18px;
+    border-bottom: 1px dashed rgba(120, 90, 50, 0.4);
+  }
+  .found-header .left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     font-family: 'Special Elite', serif;
-    font-size: 1.8rem;
-    letter-spacing: 8px;
-    color: rgba(139, 42, 42, 0.4);
-    border: 3px double rgba(139, 42, 42, 0.45);
-    padding: 10px 28px;
-    border-radius: 6px;
-    pointer-events: none;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
     text-transform: uppercase;
-    z-index: 4;
-    background: radial-gradient(ellipse, rgba(255,240,220,0.15), transparent 70%);
+    color: var(--accent-dark);
+    opacity: 0.85;
+  }
+  .found-header .left svg { width: 20px; height: 20px; }
+  .found-header .right {
+    font-family: 'Special Elite', serif;
+    font-size: 0.68rem;
+    letter-spacing: 1.5px;
+    color: var(--ink-faded);
+    opacity: 0.65;
+  }
+
+  /* Оригинальное письмо (внутри конверта) — «сложено» */
+  .orig-letter {
+    position: relative;
+    background: var(--paper);
+    background-image:
+      radial-gradient(ellipse at 10% 10%, rgba(255,255,255,0.5), transparent 40%),
+      repeating-linear-gradient(0deg, transparent 0px, transparent 27px, rgba(120,90,50,0.05) 27px, rgba(120,90,50,0.05) 28px);
+    padding: 22px 26px;
+    border-radius: 2px;
+    box-shadow:
+      0 4px 10px rgba(0,0,0,0.15),
+      0 1px 0 rgba(255,255,255,0.5) inset;
+    margin-bottom: 22px;
+    transform: rotate(-0.3deg);
+  }
+  .orig-letter::before {
+    content: 'ОРИГИНАЛЬНОЕ ПИСЬМО';
+    position: absolute;
+    top: -9px; left: 16px;
+    padding: 2px 10px;
+    background: var(--paper-aged);
+    font-family: 'Special Elite', serif;
+    font-size: 0.6rem;
+    letter-spacing: 2px;
+    color: var(--ink-faded);
+    border-radius: 3px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+  }
+
+  .orig-letter h4 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: 1.15rem;
+    margin-bottom: 8px;
+    color: var(--ink);
+    line-height: 1.25;
+  }
+  .orig-letter .orig-meta {
+    font-family: 'Special Elite', serif;
+    font-size: 0.65rem;
+    letter-spacing: 1.3px;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    opacity: 0.7;
+    margin-bottom: 12px;
+  }
+  .orig-letter p {
+    font-family: 'Caveat', cursive;
+    font-size: 1.2rem;
+    line-height: 1.35;
+    color: #2a2118;
+    white-space: pre-wrap;
+  }
+
+  /* Комментарий того, кто нашёлся */
+  .response {
+    position: relative;
+    background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(230,215,180,0.4));
+    border: 1px solid rgba(120, 90, 50, 0.3);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+    padding: 22px 26px 22px 30px;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.6),
+      0 6px 14px rgba(0,0,0,0.12);
+  }
+  .response::before {
+    content: '';
+    position: absolute;
+    top: -6px; left: 22px;
+    width: 10px; height: 10px;
+    background: inherit;
+    border-left: 1px solid rgba(120, 90, 50, 0.3);
+    border-top: 1px solid rgba(120, 90, 50, 0.3);
+    transform: rotate(45deg);
+  }
+  .response-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    font-family: 'Special Elite', serif;
+    font-size: 0.68rem;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: var(--accent-dark);
+  }
+  .response-head svg { width: 18px; height: 18px; flex-shrink: 0; }
+  .response p {
+    font-family: 'Caveat', cursive;
+    font-size: 1.35rem;
+    line-height: 1.4;
+    color: #2a2118;
+    white-space: pre-wrap;
+  }
+  .response p.auto {
+    font-style: italic;
+    opacity: 0.85;
+  }
+
+  /* Бейдж «Доставлено» поверх конверта */
+  .delivered-seal {
+    position: absolute;
+    top: 46%;
+    right: 40px;
+    transform: translateY(-50%) rotate(-12deg);
+    pointer-events: none;
+    z-index: 5;
+    opacity: 0.55;
     mix-blend-mode: multiply;
   }
-
-  /* ── Конверт «найден» — приглушённый ── */
-  .envelope.found {
-    background-color: var(--paper-warm);
-    filter: sepia(0.08);
-  }
-
-  /* ── Чернильная клякса (декор) ── */
-  .ink-blot {
-    position: absolute;
-    width: 40px; height: 40px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(42, 33, 24, 0.15) 0%, transparent 70%);
-    pointer-events: none;
-    z-index: 1;
+  @media (max-width: 720px) {
+    .delivered-seal {
+      top: auto;
+      bottom: 20px;
+      right: 20px;
+      transform: rotate(-8deg) scale(0.85);
+    }
   }
 
   /* ══════════════════════════════════════════════
-     ПУСТОЕ СОСТОЯНИЕ
+     ABOUT — «Мы с вами»
      ══════════════════════════════════════════════ */
-  .empty-state {
-    text-align: center;
-    padding: 60px 20px;
-    color: #cbb48a;
-    font-family: 'Caveat', cursive;
-    font-size: 1.5rem;
-    opacity: 0.7;
-    grid-column: 1 / -1;
-    line-height: 1.4;
-  }
-  .empty-state::before {
-    content: '📭';
-    display: block;
-    font-size: 3.5rem;
-    margin-bottom: 16px;
-    opacity: 0.6;
-    filter: sepia(0.5);
-  }
-
-  /* ══════════════════════════════════════════════
-     ВКЛАДКА «МЫ С ВАМИ» — история почты
-     ══════════════════════════════════════════════ */
-  .about-block {
-    grid-column: 1 / -1;
-    padding: 0;
-    position: relative;
-  }
+  .about-block { grid-column: 1 / -1; }
 
   .about-letter {
     position: relative;
@@ -734,7 +788,6 @@
     pointer-events: none;
     border-radius: 2px;
   }
-
   .about-letter::after {
     content: '';
     position: absolute;
@@ -744,13 +797,12 @@
     background: linear-gradient(180deg, rgba(200,170,120,0.5), rgba(160,130,80,0.3));
     border-radius: 2px;
     box-shadow: 0 3px 8px rgba(0,0,0,0.3);
-    /* скотч */
   }
 
   .about-letter h2 {
     font-family: 'Special Elite', serif;
     font-size: 1.7rem;
-    letter-spacing: 3px;
+    letter-spacing: 4px;
     text-transform: uppercase;
     text-align: center;
     margin-bottom: 8px;
@@ -770,7 +822,6 @@
     color: var(--gold);
     opacity: 0.6;
   }
-
   .about-letter p {
     font-family: 'Cormorant Garamond', serif;
     font-size: 1.15rem;
@@ -796,7 +847,6 @@
     line-height: 0.9;
     margin: 4px 10px 0 0;
     color: var(--seal);
-    text-shadow: 1px 1px 0 rgba(0,0,0,0.1);
   }
   .about-letter strong { color: var(--seal-dark); font-weight: 700; }
   .about-letter em { color: var(--accent-dark); }
@@ -829,15 +879,12 @@
     gap: 20px;
     margin-top: 8px;
   }
-
   .postman-card {
     text-align: center;
     padding: 24px 18px 20px;
     border-radius: 6px;
-    background:
-      linear-gradient(180deg, rgba(255,255,255,0.35), rgba(200,170,120,0.15));
+    background: linear-gradient(180deg, rgba(255,255,255,0.35), rgba(200,170,120,0.15));
     border: 1px dashed rgba(120, 90, 50, 0.4);
-    position: relative;
     transition: 0.3s;
   }
   .postman-card:hover {
@@ -847,13 +894,12 @@
   }
 
   .postman-avatar {
-    width: 72px; height: 72px;
+    width: 76px; height: 76px;
     border-radius: 50%;
     margin: 0 auto 14px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2rem;
     background: radial-gradient(circle at 35% 30%, #c9a86a, #8b6a2a 70%, #5e4520);
     box-shadow:
       inset 0 -4px 8px rgba(0,0,0,0.4),
@@ -862,6 +908,7 @@
       0 0 0 3px rgba(255,220,180,0.15);
     position: relative;
   }
+  .postman-avatar svg { width: 42px; height: 42px; }
   .postman-avatar::after {
     content: '';
     position: absolute;
@@ -869,14 +916,12 @@
     border-radius: 50%;
     border: 1px dashed rgba(120, 90, 50, 0.4);
   }
-
   .postman-card h4 {
     font-family: 'Cormorant Garamond', serif;
     font-weight: 700;
     font-size: 1.2rem;
     color: var(--ink);
     margin-bottom: 6px;
-    letter-spacing: 0.3px;
   }
   .postman-card .role {
     font-family: 'Special Elite', serif;
@@ -914,13 +959,31 @@
     margin-top: 4px;
   }
 
-  /* ══════════════════════════════════════════════
-     FOOTER
-     ══════════════════════════════════════════════ */
+  /* ═══════════ EMPTY ═══════════ */
+  .empty-state {
+    text-align: center;
+    padding: 70px 20px;
+    color: #cbb48a;
+    font-family: 'Caveat', cursive;
+    font-size: 1.5rem;
+    opacity: 0.75;
+    grid-column: 1 / -1;
+    line-height: 1.5;
+  }
+  .empty-state svg {
+    display: block;
+    margin: 0 auto 20px;
+    width: 90px;
+    height: 90px;
+    opacity: 0.55;
+    filter: drop-shadow(0 6px 14px rgba(0,0,0,0.5));
+  }
+
+  /* ═══════════ FOOTER ═══════════ */
   footer {
-    max-width: 960px;
+    max-width: 1100px;
     margin: 70px auto 0;
-    padding: 0 20px;
+    padding: 0 24px;
     text-align: center;
     color: #9a8a6a;
     font-family: 'Caveat', cursive;
@@ -928,18 +991,15 @@
     opacity: 0.7;
     position: relative;
   }
-  footer::before {
-    content: '❦';
+  footer svg {
     display: block;
-    font-size: 1.6rem;
-    margin-bottom: 8px;
+    margin: 0 auto 8px;
+    width: 32px;
+    height: 32px;
     opacity: 0.5;
-    color: var(--gold);
   }
 
-  /* ══════════════════════════════════════════════
-     МОДАЛКИ
-     ══════════════════════════════════════════════ */
+  /* ═══════════ МОДАЛКИ ═══════════ */
   .modal-bg {
     position: fixed; inset: 0;
     background: rgba(0,0,0,0.88);
@@ -960,7 +1020,7 @@
       radial-gradient(ellipse at 20% 0%, rgba(255,255,255,0.65), transparent 45%),
       radial-gradient(ellipse at 80% 100%, rgba(180,150,100,0.2), transparent 50%),
       repeating-linear-gradient(0deg, transparent 0px, transparent 29px, rgba(120,90,50,0.06) 29px, rgba(120,90,50,0.06) 30px);
-    max-width: 660px;
+    max-width: 680px;
     width: 100%;
     max-height: 88vh;
     overflow-y: auto;
@@ -1015,10 +1075,8 @@
     line-height: 1.2;
     margin-bottom: 16px;
     color: var(--ink);
-    letter-spacing: 0.3px;
     padding-right: 40px;
   }
-
   .modal .meta {
     font-family: 'Special Elite', serif;
     font-size: 0.72rem;
@@ -1028,7 +1086,6 @@
     opacity: 0.75;
     margin-bottom: 24px;
   }
-
   .modal .body {
     font-family: 'Caveat', cursive;
     font-size: 1.42rem;
@@ -1046,7 +1103,6 @@
     line-height: 0.9;
     margin: 4px 8px 0 0;
   }
-
   .modal .actions {
     display: flex;
     gap: 12px;
@@ -1085,7 +1141,6 @@
     box-shadow: inset 0 1px 0 rgba(220,255,200,0.3), inset 0 -3px 6px rgba(0,0,0,0.4), 0 12px 24px rgba(90,120,60,0.55);
   }
 
-  /* ── Форма ── */
   .form-modal label {
     display: block;
     font-family: 'Special Elite', serif;
@@ -1118,49 +1173,39 @@
     border-bottom-color: var(--seal);
     background: rgba(139, 42, 42, 0.045);
   }
-  .form-modal textarea {
-    min-height: 140px;
-    resize: vertical;
-    line-height: 1.4;
-  }
+  .form-modal textarea { min-height: 140px; resize: vertical; line-height: 1.4; }
   .form-modal select { cursor: pointer; }
 
-  /* ══════════════════════════════════════════════
-     АДАПТИВ
-     ══════════════════════════════════════════════ */
+  /* ═══════════ АДАПТИВ ═══════════ */
   @media (max-width: 720px) {
-    header { padding: 34px 16px 20px; }
+    header { padding: 30px 16px 16px; }
     header h1 { letter-spacing: 6px; }
-    .logo-mark { width: 68px; height: 68px; }
-    .logo-mark::before { font-size: 28px; }
-
-    .tabs {
-      grid-template-columns: 1fr;
-      gap: 10px;
-      margin-top: 30px;
-    }
-    .tab { padding: 14px 10px 10px; }
-    .tab-inner { padding: 18px 14px 16px; }
-    .tab-icon { font-size: 1.4rem; margin-bottom: 6px; }
+    .dove-mark { width: 90px; height: 90px; }
+    .tabs { grid-template-columns: 1fr; gap: 10px; margin-top: 30px; }
+    .tab { padding: 0; }
+    .tab-inner { padding: 16px 14px 14px; flex-direction: row; gap: 14px; justify-content: flex-start; text-align: left; }
+    .tab-icon { width: 32px; height: 32px; margin-bottom: 0; }
     .tab-title { font-size: 0.85rem; }
     .tab-sub { font-size: 0.9rem; }
-
-    .envelope { padding: 26px 22px 24px; }
-    .envelope h3 { font-size: 1.25rem; padding-right: 90px; }
-    .stamp { width: 52px; height: 62px; font-size: 0.5rem; top: 16px; right: 16px; }
-    .envelope .excerpt { font-size: 1.15rem; }
-    .found-seal { font-size: 1.1rem; letter-spacing: 5px; padding: 8px 16px; }
-
-    .hero-quote { font-size: 1.3rem; }
+    .letter { padding: 26px 22px 60px; }
+    .letter h3 { font-size: 1.25rem; }
+    .letter-side { position: absolute; top: 20px; right: 20px; }
+    .stamp-svg { width: 56px; height: 66px; }
+    .postmark-svg { display: none; }
+    .letter .excerpt { font-size: 1.15rem; padding-left: 20px; }
+    .orig-letter { padding: 20px 20px; }
+    .orig-letter p { font-size: 1.1rem; }
+    .response { padding: 18px 20px; }
+    .response p { font-size: 1.2rem; }
     .modal { padding: 38px 22px 30px; }
     .modal h2 { font-size: 1.5rem; padding-right: 30px; }
     .modal .body { font-size: 1.2rem; }
     .toolbar input { min-width: 100%; }
-    .btn-new { width: 100%; }
+    .btn-new { width: 100%; justify-content: center; }
   }
 
-  /* ── Анимация появления ── */
-  .envelope, .about-letter {
+  /* Анимация появления */
+  .letter, .found-envelope, .about-letter {
     animation: riseIn 0.7s cubic-bezier(0.2, 0.9, 0.3, 1) backwards;
   }
   @keyframes riseIn {
@@ -1168,7 +1213,6 @@
     to   { opacity: 1; transform: translateY(0) rotate(var(--tilt, 0deg)); }
   }
 
-  /* Скроллбар */
   ::-webkit-scrollbar { width: 10px; }
   ::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); }
   ::-webkit-scrollbar-thumb {
@@ -1183,12 +1227,92 @@
 
 <div class="vignette"></div>
 
-<!-- ═══════════ ШАПКА ═══════════ -->
+<!-- ═══════════ ГОЛУБЬ + ШАПКА ═══════════ -->
 <header>
-  <div class="logo-mark"></div>
+  <div class="dove-mark" aria-label="Голубь Find Me">
+    <!-- Белый голубь с письмом в клюве -->
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="none">
+      <defs>
+        <linearGradient id="doveBody" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ffffff"/>
+          <stop offset="70%" stop-color="#e8e0cc"/>
+          <stop offset="100%" stop-color="#c9bfa0"/>
+        </linearGradient>
+        <linearGradient id="doveWing" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ffffff"/>
+          <stop offset="100%" stop-color="#d8cfb5"/>
+        </linearGradient>
+        <linearGradient id="doveBeak" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#d4a05e"/>
+          <stop offset="100%" stop-color="#a87038"/>
+        </linearGradient>
+        <linearGradient id="envGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#f5ecd4"/>
+          <stop offset="100%" stop-color="#e0d2b0"/>
+        </linearGradient>
+        <filter id="doveShadow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="1.2"/>
+        </filter>
+      </defs>
+
+      <!-- Внешний ореол -->
+      <circle cx="50" cy="50" r="46" fill="rgba(255, 235, 190, 0.06)"/>
+      <circle cx="50" cy="50" r="46" stroke="rgba(255, 220, 170, 0.25)" stroke-width="0.6" stroke-dasharray="2 3"/>
+
+      <!-- Хвост -->
+      <path d="M68 62 L86 68 L88 60 L82 58 L88 52 L84 50 L78 56 Z"
+            fill="url(#doveWing)" opacity="0.9"/>
+
+      <!-- Тело -->
+      <path d="M20 50 
+               C 24 38, 38 30, 52 32 
+               C 62 33, 68 40, 68 50 
+               C 68 58, 62 66, 52 68 
+               C 40 70, 26 66, 20 58 
+               C 18 55, 18 52, 20 50 Z"
+            fill="url(#doveBody)" stroke="rgba(120, 100, 70, 0.35)" stroke-width="0.5"/>
+
+      <!-- Крыло -->
+      <path d="M38 44 
+               C 42 36, 54 32, 62 36 
+               C 66 38, 68 44, 66 50 
+               C 62 48, 56 46, 50 47 
+               C 44 48, 40 50, 38 52 
+               C 34 52, 32 48, 38 44 Z"
+            fill="url(#doveWing)" stroke="rgba(120, 100, 70, 0.3)" stroke-width="0.5"/>
+      <!-- Перья на крыле -->
+      <path d="M42 42 L58 42 M42 46 L60 46 M44 50 L60 50"
+            stroke="rgba(140, 120, 90, 0.35)" stroke-width="0.4" stroke-linecap="round"/>
+
+      <!-- Голова -->
+      <circle cx="30" cy="42" r="9" fill="url(#doveBody)" stroke="rgba(120, 100, 70, 0.35)" stroke-width="0.5"/>
+      <!-- Глаз -->
+      <circle cx="28" cy="41" r="1.1" fill="#2a2118"/>
+      <circle cx="28.3" cy="40.7" r="0.4" fill="#ffffff"/>
+
+      <!-- Клюв -->
+      <path d="M22 43 L16 44 L22 46 Z" fill="url(#doveBeak)" stroke="rgba(120, 80, 40, 0.5)" stroke-width="0.4"/>
+
+      <!-- Письмо в клюве -->
+      <g transform="translate(6, 44) rotate(-12)">
+        <rect x="0" y="0" width="16" height="11" rx="0.8" fill="url(#envGrad)" stroke="rgba(140, 110, 70, 0.7)" stroke-width="0.5"/>
+        <path d="M0 1 L8 6 L16 1" stroke="rgba(140, 110, 70, 0.75)" stroke-width="0.5" fill="none"/>
+        <!-- Сургучная печать -->
+        <circle cx="8" cy="7" r="1.8" fill="#8b2a2a" stroke="#5e1a1a" stroke-width="0.4"/>
+      </g>
+
+      <!-- Веточка оливы в лапке -->
+      <path d="M44 66 Q 40 70, 34 72" stroke="#5e6f4a" stroke-width="1" fill="none" stroke-linecap="round"/>
+      <ellipse cx="42" cy="68" rx="2.5" ry="1.2" fill="#6d7f57" transform="rotate(-30 42 68)"/>
+      <ellipse cx="37" cy="71" rx="2.5" ry="1.2" fill="#6d7f57" transform="rotate(-30 37 71)"/>
+      <ellipse cx="32" cy="73" rx="2.5" ry="1.2" fill="#6d7f57" transform="rotate(-30 32 73)"/>
+    </svg>
+  </div>
+
   <h1>FIND<span class="dot">·</span>ME</h1>
   <p class="subtitle">Почтовое отделение, где письма находят адресата</p>
-  <div class="header-ornament">
+
+  <div class="header-rule">
     <span>ОСНОВАНО ЛЮДЬМИ, КОТОРЫЕ ПОТЕРЯЛИ</span>
   </div>
 </header>
@@ -1198,16 +1322,21 @@
   <p class="hero-quote">Иногда достаточно одного письма, чтобы вернуть целую жизнь.</p>
 </section>
 
-<!-- ═══════════ ПАНЕЛЬ УПРАВЛЕНИЯ ═══════════ -->
+<!-- ═══════════ ПАНЕЛЬ ═══════════ -->
 <div class="toolbar">
   <input id="search" placeholder="Поиск по имени, городу, приметам…">
   <select id="filter">
     <option value="all">Все письма</option>
     <option value="search">Ищу человека</option>
     <option value="wanted">Ищут меня</option>
-    <option value="found">Нашлись</option>
   </select>
-  <button class="btn-new" onclick="openForm()">✍ Написать письмо</button>
+  <button class="btn-new" onclick="openForm()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 4h16v16H4z"/>
+      <path d="M4 6l8 6 8-6"/>
+    </svg>
+    Написать письмо
+  </button>
 </div>
 
 <!-- ═══════════ ВКЛАДКИ ═══════════ -->
@@ -1215,7 +1344,15 @@
   <button class="tab active" data-tab="searching">
     <div class="tab-inner">
       <span class="tab-badge" id="badge-searching">0</span>
-      <span class="tab-icon">🔍</span>
+      <div class="tab-icon">
+        <!-- Лупа -->
+        <svg viewBox="0 0 40 40" fill="none">
+          <circle cx="17" cy="17" r="10" stroke="#e8d9b4" stroke-width="2.4"/>
+          <path d="M25 25 L34 34" stroke="#e8d9b4" stroke-width="3.2" stroke-linecap="round"/>
+          <circle cx="17" cy="17" r="10" stroke="rgba(0,0,0,0.3)" stroke-width="0.5"/>
+          <path d="M13 15 Q 17 11, 21 15" stroke="rgba(255,255,255,0.5)" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+        </svg>
+      </div>
       <span class="tab-title">Я ищу тебя</span>
       <span class="tab-sub">актуальные письма</span>
     </div>
@@ -1224,7 +1361,15 @@
   <button class="tab" data-tab="found">
     <div class="tab-inner">
       <span class="tab-badge" id="badge-found">0</span>
-      <span class="tab-icon">📬</span>
+      <div class="tab-icon">
+        <!-- Открытый конверт с письмом -->
+        <svg viewBox="0 0 40 40" fill="none">
+          <path d="M6 18 L20 8 L34 18 L34 32 L6 32 Z" fill="#e8d9b4" stroke="rgba(120,90,50,0.7)" stroke-width="1.4" stroke-linejoin="round"/>
+          <path d="M6 18 L20 26 L34 18" fill="none" stroke="rgba(120,90,50,0.7)" stroke-width="1.4"/>
+          <rect x="12" y="4" width="16" height="12" rx="0.6" fill="#f5ecd4" stroke="rgba(120,90,50,0.6)" stroke-width="0.8"/>
+          <path d="M12 5 L20 11 L28 5" stroke="rgba(120,90,50,0.6)" stroke-width="0.8" fill="none"/>
+        </svg>
+      </div>
       <span class="tab-title">Я найден</span>
       <span class="tab-sub">письма дошли</span>
     </div>
@@ -1232,7 +1377,16 @@
 
   <button class="tab" data-tab="about">
     <div class="tab-inner">
-      <span class="tab-icon">✒️</span>
+      <div class="tab-icon">
+        <!-- Перо -->
+        <svg viewBox="0 0 40 40" fill="none">
+          <path d="M28 6 C 20 8, 12 18, 10 30 L 14 32 C 18 24, 26 14, 32 10 Z"
+                fill="#e8d9b4" stroke="rgba(120,90,50,0.7)" stroke-width="1.2" stroke-linejoin="round"/>
+          <path d="M14 32 L 10 38 M 22 14 L 30 22 M 26 10 L 34 18"
+                stroke="rgba(120,90,50,0.6)" stroke-width="0.9" stroke-linecap="round"/>
+          <path d="M28 6 L 30 4" stroke="rgba(120,90,50,0.8)" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </div>
       <span class="tab-title">Мы с вами</span>
       <span class="tab-sub">зачем этот сайт</span>
     </div>
@@ -1242,7 +1396,13 @@
 <!-- ═══════════ ЛЕНТА ═══════════ -->
 <main class="feed" id="feed"></main>
 
-<footer>Find Me — тёплое место, где встречи случаются снова</footer>
+<footer>
+  <svg viewBox="0 0 40 40" fill="none">
+    <path d="M20 34 C 12 26, 6 22, 6 15 A 7 7 0 0 1 20 12 A 7 7 0 0 1 34 15 C 34 22, 28 26, 20 34 Z"
+          stroke="currentColor" stroke-width="1.6" fill="none" opacity="0.7"/>
+  </svg>
+  Find Me — тёплое место, где встречи случаются снова
+</footer>
 
 <!-- ═══════════ МОДАЛКА ПРОСМОТРА ═══════════ -->
 <div class="modal-bg" id="viewModal">
@@ -1252,7 +1412,7 @@
     <div class="meta" id="m-meta"></div>
     <div class="body" id="m-body"></div>
     <div class="actions">
-      <button class="btn-contact" onclick="alert('Здесь будет форма связи с автором.\nЕсли ты знаешь человека — напиши, и почтальон Find Me доставит письмо.')">✉ Я знаю этого человека</button>
+      <button class="btn-contact" onclick="alert('Здесь будет форма связи с автором.\\nЕсли ты знаешь человека — напиши, и почтальон Find Me доставит письмо.')">✉ Я знаю этого человека</button>
       <button class="btn-found" onclick="alert('Спасибо! Письмо отмечено как «доставлено». Это поможет другим.')">🤝 Мы нашлись</button>
     </div>
   </div>
@@ -1281,6 +1441,106 @@
 </div>
 
 <script>
+  /* ═══════════ SVG-КОМПОНЕНТЫ ═══════════ */
+
+  // Марка (в стиле: поиск — синяя, отклик — коричневая)
+  function svgStamp(type) {
+    const colors = {
+      search: { bg1: '#b8c8d4', bg2: '#a2b4c2', ink: '#2d4a5e', label: 'ИЩУ' },
+      wanted: { bg1: '#d4b8a8', bg2: '#c2a290', ink: '#5e3a2d', label: 'ОТКЛИК' }
+    };
+    const c = colors[type] || colors.search;
+    return `
+      <svg class="stamp-svg" viewBox="0 0 90 104" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="perf-${type}" x="0" y="0" width="6" height="6" patternUnits="userSpaceOnUse">
+            <rect width="6" height="6" fill="${c.bg1}"/>
+            <rect x="0" y="0" width="3" height="3" fill="${c.bg2}"/>
+          </pattern>
+          <linearGradient id="stampGrad-${type}" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="${c.bg1}"/>
+            <stop offset="100%" stop-color="${c.bg2}"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Перфорация (зубчатый край) -->
+        <g>
+          ${Array.from({length: 15}, (_, i) => `<circle cx="${3 + i * 6}" cy="2" r="1.6" fill="#f2e7cd"/>`).join('')}
+          ${Array.from({length: 15}, (_, i) => `<circle cx="${3 + i * 6}" cy="102" r="1.6" fill="#f2e7cd"/>`).join('')}
+          ${Array.from({length: 17}, (_, i) => `<circle cx="2" cy="${3 + i * 6}" r="1.6" fill="#f2e7cd"/>`).join('')}
+          ${Array.from({length: 17}, (_, i) => `<circle cx="88" cy="${3 + i * 6}" r="1.6" fill="#f2e7cd"/>`).join('')}
+        </g>
+
+        <!-- Тело марки -->
+        <rect x="4" y="4" width="82" height="96" fill="url(#stampGrad-${type})"/>
+
+        <!-- Внутренняя рамка -->
+        <rect x="8" y="8" width="74" height="88" fill="none" stroke="${c.ink}" stroke-width="0.8" opacity="0.55"/>
+        <rect x="11" y="11" width="68" height="82" fill="none" stroke="${c.ink}" stroke-width="0.4" opacity="0.35" stroke-dasharray="1 1.5"/>
+
+        <!-- Верх: год -->
+        <text x="45" y="22" font-family="'Special Elite', monospace" font-size="6" fill="${c.ink}" text-anchor="middle" letter-spacing="1.5" opacity="0.7">FIND·ME</text>
+
+        <!-- Центр: символ (голубь или конверт) -->
+        <g transform="translate(45, 52)">
+          <circle r="17" fill="none" stroke="${c.ink}" stroke-width="0.7" opacity="0.4"/>
+          <circle r="15" fill="none" stroke="${c.ink}" stroke-width="0.3" opacity="0.3" stroke-dasharray="1 1.5"/>
+          <!-- Силуэт голубя -->
+          <path d="M-9 2 C-8 -4, -3 -7, 3 -6 C7 -5, 9 -2, 9 2 C9 6, 6 9, 2 9 C-3 10, -8 8, -9 4 Z"
+                fill="${c.ink}" opacity="0.85"/>
+          <path d="M-6 -1 C-4 -5, 1 -6, 5 -3 C6 -1, 5 2, 2 3 C-2 4, -5 2, -6 -1 Z"
+                fill="${c.bg1}" opacity="0.9"/>
+          <!-- Письмо в клюве -->
+          <rect x="-13" y="-1" width="6" height="4" fill="${c.bg1}" stroke="${c.ink}" stroke-width="0.4"/>
+          <path d="M-13 0 L-10 2 L-7 0" stroke="${c.ink}" stroke-width="0.3" fill="none"/>
+          <!-- Глаз -->
+          <circle cx="-4" cy="-2" r="0.6" fill="${c.bg1}"/>
+        </g>
+
+        <!-- Низ: надпись -->
+        <text x="45" y="88" font-family="'Special Elite', monospace" font-size="7" fill="${c.ink}" text-anchor="middle" letter-spacing="1.2">${c.label}</text>
+
+        <!-- Год -->
+        <text x="45" y="97" font-family="'Special Elite', monospace" font-size="5" fill="${c.ink}" text-anchor="middle" letter-spacing="0.8" opacity="0.6">2026 · ПОЧТА</text>
+      </svg>
+    `;
+  }
+
+  // Штемпель (круглый почтовый оттиск)
+  function svgPostmark(number) {
+    return `
+      <svg class="postmark-svg" viewBox="0 0 120 74" xmlns="http://www.w3.org/2000/svg">
+        <!-- Линии-«волны» слева -->
+        <g stroke="#2d4a5e" stroke-width="0.7" fill="none" opacity="0.5">
+          <path d="M2 20 Q 6 16, 10 20 T 18 20 T 26 20"/>
+          <path d="M2 30 Q 6 26, 10 30 T 18 30 T 26 30"/>
+          <path d="M2 40 Q 6 36, 10 40 T 18 40 T 26 40"/>
+          <path d="M2 50 Q 6 46, 10 50 T 18 50 T 26 50"/>
+        </g>
+        <!-- Круг штемпеля -->
+        <circle cx="72" cy="37" r="30" fill="none" stroke="#2d4a5e" stroke-width="1.4" opacity="0.55"/>
+        <circle cx="72" cy="37" r="26" fill="none" stroke="#2d4a5e" stroke-width="0.6" opacity="0.45" stroke-dasharray="2 2"/>
+        <text x="72" y="32" font-family="'Special Elite', monospace" font-size="6" fill="#2d4a5e" text-anchor="middle" letter-spacing="1" opacity="0.75">FIND·ME</text>
+        <text x="72" y="40" font-family="'Special Elite', monospace" font-size="5" fill="#2d4a5e" text-anchor="middle" letter-spacing="0.8" opacity="0.65">ОТДЕЛЕНИЕ</text>
+        <text x="72" y="49" font-family="'Special Elite', monospace" font-size="6" fill="#2d4a5e" text-anchor="middle" letter-spacing="1" opacity="0.75">№${number}</text>
+      </svg>
+    `;
+  }
+
+  // Печать «ДОСТАВЛЕНО» (для вкладки «Я найден»)
+  function svgDelivered() {
+    return `
+      <svg class="delivered-seal" viewBox="0 0 220 90" xmlns="http://www.w3.org/2000/svg" width="220" height="90">
+        <g fill="none" stroke="#8b2a2a" stroke-width="2.5" opacity="0.85">
+          <rect x="4" y="4" width="212" height="82" rx="4"/>
+          <rect x="10" y="10" width="200" height="70" rx="3" stroke-width="1"/>
+        </g>
+        <text x="110" y="44" font-family="'Special Elite', monospace" font-size="26" fill="#8b2a2a" text-anchor="middle" letter-spacing="6" opacity="0.85">ДОСТАВЛЕНО</text>
+        <text x="110" y="66" font-family="'Special Elite', monospace" font-size="9" fill="#8b2a2a" text-anchor="middle" letter-spacing="3" opacity="0.7">FIND·ME · ПОЧТА</text>
+      </svg>
+    `;
+  }
+
   /* ═══════════ ДАННЫЕ ═══════════ */
   const posts = [
     {
@@ -1304,24 +1564,39 @@
       title: 'Ищу соседа, который спас меня на пожаре',
       city: 'Пермь', years: '2008',
       author: 'Мария С.', date: 'неделю назад',
-      body: `В ноябре 2008 года горел наш дом на улице Мира. Меня вынес сосед с пятого этажа — молодой мужчина, звали, кажется, Андрей. Он потом уехал, я не успела даже поблагодарить.\n\nПомню: высокий, светлые волосы, играл на гитаре у подъезда по вечерам.`,
+      body: `В ноябре 2008 года горел наш дом на улице Мира. Меня вынес сосед с пятого этажа — молодой мужчина, звали, кажется, Андрей.\n\nОн потом уехал, я не успела даже поблагодарить. Помню: высокий, светлые волосы, играл на гитаре у подъезда по вечерам.`,
       status: 'open'
     },
+    /* ═══ НАЙДЕННЫЕ ═══ */
     {
-      id: 4, type: 'found',
+      id: 4, type: 'search',
       title: 'Нашёл школьную учительницу!',
       city: 'Санкт-Петербург', years: '1988–1994',
       author: 'Ольга В.', date: 'неделю назад',
-      body: `Писала сюда про Марию Ивановну из школы №117. Через три месяца откликнулась её дочь. Мы встретились в июне.\n\nСпасибо всем, кто откликался и делился.`,
-      status: 'found'
+      body: `Писала сюда про Марию Ивановну из школы №117. Она вела у нас литературу, всегда носила синюю шаль и читала нам вслух Ахматову.\n\nЧерез три месяца откликнулась её дочь. Мы встретились в июне.`,
+      status: 'found',
+      foundBy: 'Ирина Л. (дочь Марии Ивановны)',
+      foundComment: `Мария Ивановна — моя мама. Ей 84, она живёт со мной. Когда я показала ей ваше письмо, она заплакала и вспомнила вашу фамилию.\n\nМы встретились в июне. Мама до сих пор хранит ваши старые тетради по литературе. Спасибо, что нашли её.`
     },
     {
-      id: 5, type: 'found',
+      id: 5, type: 'search',
       title: 'Сестра нашлась спустя 22 года',
       city: 'Алматы', years: '1999–2021',
       author: 'Тимур Ж.', date: '2 недели назад',
-      body: `Мы потеряли связь с сестрой в 1999, когда семья переехала. Писал сюда в прошлом году. Одно из писем совпало — по родинке и старому адресу.\n\nЛетом мы встретились. Не теряйте надежду.`,
-      status: 'found'
+      body: `Мы потеряли связь с сестрой в 1999, когда семья переехала. Писал сюда в прошлом году.\n\nОдно из писем совпало — по родинке на щеке и старому адресу.`,
+      status: 'found',
+      foundBy: 'Айгуль Ж. (сестра)',
+      foundComment: `Тимур, я прочитала твоё письмо и сразу поняла — это ты. Помню, как мы прятались под одеялом с фонариком и читали сказки. И как ты всегда доедал за мной манную кашу.\n\nЛетом мы встретились. Теперь созваниваемся каждую неделю.`
+    },
+    {
+      id: 6, type: 'wanted',
+      title: 'Меня нашла дочь фронтового друга',
+      city: 'Смоленск', years: '1943–2023',
+      author: 'Пётр Н.', date: 'месяц назад',
+      body: `Мой отец всю жизнь искал семью своего фронтового товарища — Ивана Петровича, погибшего под Смоленском. У него оставалась маленькая дочь.\n\nНедавно написал сюда просто в память. И — нашли.`,
+      status: 'found',
+      foundBy: 'Вера И. (дочь Ивана Петровича)',
+      foundComment: `Моему отцу было 22, когда он погиб. Я всю жизнь собирала о нём любые крупицы. Вы написали, что у вашего отца хранилась его полевая сумка. Это невероятно.\n\nСпасибо вам. Мы встретились, и вы отдали мне её.`
     }
   ];
 
@@ -1329,7 +1604,6 @@
   let currentTab = 'searching';
   const feed = document.getElementById('feed');
 
-  /* ═══════════ ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК ═══════════ */
   document.querySelectorAll('.tab').forEach(tab => {
     tab.addEventListener('click', () => {
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -1339,7 +1613,6 @@
     });
   });
 
-  /* ═══════════ ОБНОВЛЕНИЕ БЕЙДЖЕЙ ═══════════ */
   function updateBadges() {
     const searching = posts.filter(p => p.status === 'open').length;
     const found = posts.filter(p => p.status === 'found').length;
@@ -1347,19 +1620,14 @@
     document.getElementById('badge-found').textContent = found;
   }
 
-  /* ═══════════ ПОЛУЧИТЬ ОТФИЛЬТРОВАННЫЕ ═══════════ */
   function getFiltered() {
     const q = document.getElementById('search').value.toLowerCase().trim();
     const f = document.getElementById('filter').value;
 
     let list;
-    if (currentTab === 'searching') {
-      list = posts.filter(p => p.status === 'open');
-    } else if (currentTab === 'found') {
-      list = posts.filter(p => p.status === 'found');
-    } else {
-      return [];
-    }
+    if (currentTab === 'searching') list = posts.filter(p => p.status === 'open');
+    else if (currentTab === 'found') list = posts.filter(p => p.status === 'found');
+    else return [];
 
     return list.filter(p => {
       const matchQ = !q ||
@@ -1371,18 +1639,18 @@
     });
   }
 
-  /* ═══════════ РЕНДЕР ═══════════ */
   function render() {
-    if (currentTab === 'about') {
-      feed.innerHTML = renderAbout();
-      return;
-    }
+    if (currentTab === 'about') { feed.innerHTML = renderAbout(); return; }
 
     const list = getFiltered();
 
     if (list.length === 0) {
       feed.innerHTML = `
         <div class="empty-state">
+          <svg viewBox="0 0 100 100" fill="none">
+            <path d="M50 85 C 30 70, 15 60, 15 42 A 18 18 0 0 1 50 32 A 18 18 0 0 1 85 42 C 85 60, 70 70, 50 85 Z"
+                  stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.6"/>
+          </svg>
           ${currentTab === 'searching'
             ? 'Пока никого не ищут.<br>Может, твоё письмо станет первым?'
             : 'Здесь пока пусто.<br>Но хорошие новости обязательно придут.'}
@@ -1390,65 +1658,114 @@
       return;
     }
 
-    feed.innerHTML = list.map((p, i) => renderEnvelope(p, i)).join('');
+    if (currentTab === 'searching') {
+      feed.innerHTML = list.map((p, i) => renderLetter(p, i)).join('');
+    } else {
+      feed.innerHTML = list.map((p, i) => renderFoundEnvelope(p, i)).join('');
+    }
   }
 
-  function renderEnvelope(p, i) {
-    const isFound = p.status === 'found';
+  /* ═══ ПИСЬМО (активное) ═══ */
+  function renderLetter(p, i) {
     const tilt = (Math.random() * 1.2 - 0.6).toFixed(2);
     const num = String(p.id).padStart(4, '0');
+    const tagClass = p.type === 'wanted' ? 'wanted' : '';
+    const tagText = p.type === 'search' ? 'Ищу человека' : 'Ищут меня';
+    const tagIcon = p.type === 'search'
+      ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="M16 16 L21 21" stroke-linecap="round"/></svg>`
+      : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l9 6 9-6"/><rect x="3" y="6" width="18" height="14" rx="1"/></svg>`;
 
-    const stampClass = p.type === 'search' ? 'search'
-                     : p.type === 'wanted' ? 'wanted'
-                     : 'found';
-    const stampText = p.type === 'search' ? 'ИЩУ'
-                    : p.type === 'wanted' ? 'ОТКЛИК'
-                    : 'НАШЛИСЬ';
-
-    const tagClass = isFound ? 'seal' : (p.type === 'wanted' ? 'wanted' : '');
-    const tagText = p.type === 'search' ? '🔍 Ищу человека'
-                   : p.type === 'wanted' ? '📬 Ищут меня'
-                   : '🤝 Мы нашлись';
-
-    const excerpt = p.body.replace(/\n+/g, ' ').slice(0, 165);
-
-    // Псевдо-случайная чернильная клякса
-    const blotPos = i % 3 === 0
-      ? '<span class="ink-blot" style="top:60%;left:8%;"></span>'
-      : i % 3 === 1
-      ? '<span class="ink-blot" style="top:20%;right:15%;width:30px;height:30px;"></span>'
-      : '';
+    const excerpt = p.body.replace(/\n+/g, ' ').slice(0, 170);
 
     return `
-      <article class="envelope ${isFound ? 'found' : ''}"
+      <article class="letter"
                style="--tilt: ${tilt}deg; animation-delay: ${i * 0.08}s;"
                onclick="openPost(${p.id})">
-        ${blotPos}
-        <div class="stamp ${stampClass}">${stampText}</div>
-        <div class="postmark">
-          FIND·ME<br>ОТДЕЛЕНИЕ<br>№${num}
+        <div class="letter-main">
+          <div class="letter-head">
+            <span class="letter-number">ПИСЬМО №${num}</span>
+          </div>
+          <h3>${p.title}</h3>
+          <div class="meta">
+            <span>${p.author}</span>
+            <span class="dot">·</span>
+            <span>${p.city}</span>
+            <span class="dot">·</span>
+            <span>${p.years}</span>
+            <span class="dot">·</span>
+            <span>${p.date}</span>
+          </div>
+          <div class="excerpt">${excerpt}…»</div>
+          <span class="tag ${tagClass}">${tagIcon}${tagText}</span>
         </div>
-        ${isFound ? '<div class="found-seal">Доставлено</div>' : ''}
-        <div class="letter-head">
-          <span class="number">ПИСЬМО №${num}</span>
-        </div>
-        <h3>${p.title}</h3>
-        <div class="meta">
-          <span>${p.author}</span>
-          <span class="dot">·</span>
-          <span>${p.city}</span>
-          <span class="dot">·</span>
-          <span>${p.years}</span>
-          <span class="dot">·</span>
-          <span>${p.date}</span>
-        </div>
-        <div class="excerpt">${excerpt}…»</div>
-        <span class="tag ${tagClass}">${tagText}</span>
+
+        <aside class="letter-side">
+          ${svgStamp(p.type)}
+          ${svgPostmark(num)}
+        </aside>
       </article>
     `;
   }
 
-  /* ═══════════ ВКЛАДКА «МЫ С ВАМИ» ═══════════ */
+  /* ═══ КОНВЕРТ С ОТВЕТОМ (найденное) ═══ */
+  function renderFoundEnvelope(p, i) {
+    const tilt = (Math.random() * 1.0 - 0.5).toFixed(2);
+    const num = String(p.id).padStart(4, '0');
+
+    const response = p.foundComment || 'Спасибо всем, кто помог. Письмо дошло до адресата.';
+
+    return `
+      <article class="found-envelope"
+               style="--tilt: ${tilt}deg; animation-delay: ${i * 0.08}s;"
+               onclick="openPost(${p.id})">
+        <div class="flap"></div>
+        <div class="body-env">
+
+          <div class="found-header">
+            <div class="left">
+              <!-- голубь с письмом -->
+              <svg viewBox="0 0 40 40" fill="none">
+                <path d="M8 22 C9 16, 14 12, 22 13 C28 14, 31 18, 31 23 C31 28, 27 32, 21 33 C14 34, 9 30, 8 25 C7 24, 7 23, 8 22 Z"
+                      fill="#5e6f4a" opacity="0.85"/>
+                <path d="M14 19 C17 15, 23 14, 28 17 C30 19, 29 22, 26 23 C22 24, 18 23, 16 21 C14 21, 13 20, 14 19 Z"
+                      fill="#e8e0cc"/>
+                <rect x="4" y="22" width="8" height="6" fill="#f5ecd4" stroke="#5e6f4a" stroke-width="0.6"/>
+                <path d="M4 22.5 L8 25 L12 22.5" stroke="#5e6f4a" stroke-width="0.5" fill="none"/>
+                <circle cx="9" cy="20" r="2.5" fill="#5e6f4a"/>
+                <circle cx="8.3" cy="19.7" r="0.4" fill="#fff"/>
+              </svg>
+              Доставлено · Письмо №${num}
+            </div>
+            <div class="right">${p.author} · ${p.city} · ${p.date}</div>
+          </div>
+
+          <!-- Оригинальное письмо -->
+          <div class="orig-letter">
+            <h4>${p.title}</h4>
+            <div class="orig-meta">${p.author} · ${p.city} · ${p.years}</div>
+            <p>${p.body}</p>
+          </div>
+
+          <!-- Комментарий нашедшего -->
+          <div class="response">
+            <div class="response-head">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 8l9 6 9-6"/>
+                <rect x="3" y="6" width="18" height="14" rx="1"/>
+              </svg>
+              ${p.foundBy ? `Ответ от ${p.foundBy}` : 'Ответ адресата'}
+            </div>
+            <p class="${p.foundComment ? '' : 'auto'}">${response}</p>
+          </div>
+
+        </div>
+
+        ${svgDelivered()}
+      </article>
+    `;
+  }
+
+  /* ═══ ABOUT ═══ */
   function renderAbout() {
     return `
       <div class="about-block">
@@ -1469,7 +1786,7 @@
           </p>
 
           <p>
-            Когда письмо находит адресата, оно не исчезает. Оно переезжает в раздел <strong>«Я найден»</strong> — как конверт со штампом «Доставлено». Чтобы те, кто ещё ищет, видели: это возможно. Чтобы не сдавались.
+            Когда письмо находит адресата, оно не исчезает. Оно переезжает в раздел <strong>«Я найден»</strong> — как конверт со штампом «Доставлено». Внутри — оригинальное письмо и ответ того, кто нашёлся. Чтобы те, кто ещё ищет, видели: это возможно. Чтобы не сдавались.
           </p>
 
           <div class="postmen-title">Наши почтальоны</div>
@@ -1480,25 +1797,49 @@
 
           <div class="postmen-grid">
             <div class="postman-card">
-              <div class="postman-avatar">📮</div>
+              <div class="postman-avatar">
+                <svg viewBox="0 0 40 40" fill="none">
+                  <circle cx="20" cy="16" r="6" fill="none" stroke="#3a2f1e" stroke-width="1.6"/>
+                  <path d="M8 34 C8 26, 32 26, 32 34" stroke="#3a2f1e" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+                  <circle cx="20" cy="16" r="2.4" fill="#3a2f1e" opacity="0.5"/>
+                </svg>
+              </div>
               <h4>Сортировщик</h4>
               <div class="role">Отдел «Я ищу тебя»</div>
               <p class="desc">Читает каждое новое письмо и проверяет, нет ли похожего в других разделах.</p>
             </div>
             <div class="postman-card">
-              <div class="postman-avatar">🕵️</div>
+              <div class="postman-avatar">
+                <svg viewBox="0 0 40 40" fill="none">
+                  <path d="M20 8 L22 12 L26 13 L23 16 L24 20 L20 18 L16 20 L17 16 L14 13 L18 12 Z"
+                        fill="#3a2f1e" opacity="0.8"/>
+                  <circle cx="20" cy="26" r="7" fill="none" stroke="#3a2f1e" stroke-width="1.6"/>
+                  <circle cx="20" cy="26" r="2.5" fill="#3a2f1e" opacity="0.5"/>
+                </svg>
+              </div>
               <h4>Связной</h4>
               <div class="role">Отдел совпадений</div>
               <p class="desc">Сопоставляет детали: имена, даты, города, приметы. Ищет пересечения в историях.</p>
             </div>
             <div class="postman-card">
-              <div class="postman-avatar">✒️</div>
+              <div class="postman-avatar">
+                <svg viewBox="0 0 40 40" fill="none">
+                  <path d="M28 6 C 20 8, 12 18, 10 30 L 14 32 C 18 24, 26 14, 32 10 Z"
+                        fill="none" stroke="#3a2f1e" stroke-width="1.6" stroke-linejoin="round"/>
+                  <path d="M14 32 L 10 38" stroke="#3a2f1e" stroke-width="1.4" stroke-linecap="round"/>
+                </svg>
+              </div>
               <h4>Переписчик</h4>
               <div class="role">Отдел связи</div>
               <p class="desc">Пишет обеим сторонам, если нашёл совпадение — аккуратно, без давления.</p>
             </div>
             <div class="postman-card">
-              <div class="postman-avatar">🕊️</div>
+              <div class="postman-avatar">
+                <svg viewBox="0 0 40 40" fill="none">
+                  <path d="M20 33 C 12 26, 6 22, 6 15 A 7 7 0 0 1 20 12 A 7 7 0 0 1 34 15 C 34 22, 28 26, 20 33 Z"
+                        fill="none" stroke="#3a2f1e" stroke-width="1.6"/>
+                </svg>
+              </div>
               <h4>Хранитель</h4>
               <div class="role">Отдел памяти</div>
               <p class="desc">Следит, чтобы письма не терялись. Переносит доставленные — в архив «Я найден».</p>
@@ -1549,7 +1890,6 @@
     closeModal('formModal');
     updateBadges();
 
-    // Переключаемся на «Я ищу тебя», если были в других разделах
     if (currentTab !== 'searching') {
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
       document.querySelector('[data-tab="searching"]').classList.add('active');
@@ -1558,10 +1898,8 @@
     render();
   }
 
-  /* ═══════════ СОБЫТИЯ ═══════════ */
   document.getElementById('search').addEventListener('input', render);
   document.getElementById('filter').addEventListener('change', render);
-
   document.querySelectorAll('.modal-bg').forEach(bg => {
     bg.addEventListener('click', e => { if (e.target === bg) bg.classList.remove('active'); });
   });
@@ -1569,7 +1907,6 @@
     if (e.key === 'Escape') document.querySelectorAll('.modal-bg.active').forEach(m => m.classList.remove('active'));
   });
 
-  /* ═══════════ СТАРТ ═══════════ */
   updateBadges();
   render();
 </script>
